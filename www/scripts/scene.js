@@ -101,8 +101,7 @@ var game = {
         clearInterval( minion.move );
         game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
       } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
-        
-        //minion.controlsUpdate('mouseup');
+        game.physics.action( 'stop', minion );
       }
 
       game.DRAG = { object: false, id: false };

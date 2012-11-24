@@ -32,14 +32,18 @@ game.physics = ( function () {
       v.multiplyScalar( 1 / 40 );
 
       minion.handL.control.position.addSelf( v );
-      minion.update();
 
     }, 50 );    
 
   }
 
   var move = function ( minion ) {
-    if ( moveId !== null ) clearInterval( moveId );
+
+    minion.mesh.setDamping( 0.8, 0.8 );
+
+    clearInterval( moveId );
+
+    var prevC = minion.mesh.position.clone();
 
     moveId = setInterval( function () {
 
@@ -47,16 +51,22 @@ game.physics = ( function () {
       var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 );
       var dist = axis.clone().distanceTo( minion.mesh.position );
 
-      minion.update();
-
-      if ( dist > 8 ) 
+      if ( dist > 8 ) {
         minion.mesh.applyCentralImpulse( force );
+      } 
 
     }, 50 ); 
 
   }
 
+  var stop = function ( minion ) {
+    var force = new THREE.Vector3();
+    minion.mesh.applyCentralImpulse( force );
+    clearInterval( moveId );
+  }
+
   var catapult = function ( minion, d ) {
+    minion.mesh.setDamping( 0.1, 0.8 );
     var force = d.clone().normalize().multiplyScalar( 200 ).negate();
     minion.mesh.applyCentralImpulse( force );
   }
@@ -74,6 +84,9 @@ game.physics = ( function () {
         break;
       case 'catapult':
         catapult.apply( null, Array.prototype.slice.call( arguments, 1 ) );
+        break;
+      case 'stop':
+        stop.apply( null, Array.prototype.slice.call( arguments, 1 ) );
         break;
     }
   }
