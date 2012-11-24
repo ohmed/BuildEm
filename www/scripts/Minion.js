@@ -50,7 +50,7 @@ var Minion = function() {
     var mesh = self.mesh;
 
     /* create control Body */
-    self.body.control = new THREE.Mesh(new THREE.CubeGeometry(1.7, 1.8, 2, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}) );
+    self.body.control = new THREE.Mesh( new THREE.CubeGeometry(1.7, 1.8, 2, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}) );
     self.body.control.material.opacity = 0.5;
     self.body.control.material.transparent = true;
     self.body.control.position = mesh.position;
@@ -63,7 +63,7 @@ var Minion = function() {
       var vector = mesh.geometry.vertices[1317].clone();
       self.handL._initial = vector.clone();
       mesh.matrixWorld.multiplyVector3( vector );
-      self.handL.control = new Physijs.BoxMesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}), 0 );
+      self.handL.control = new THREE.Mesh( new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}) );
       self.handL.control.material.opacity = 0.5;
       self.handL.control.material.transparent = true;
       self.handL.control.position = vector;
@@ -76,7 +76,7 @@ var Minion = function() {
     setTimeout( function() {
       var vector = mesh.geometry.vertices[ self.handR.verts[0] ].clone();
       mesh.matrixWorld.multiplyVector3( vector );
-      self.handR.control = new Physijs.BoxMesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}), 0 );
+      self.handR.control = new THREE.Mesh( new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}) );
       self.handR.control.material.opacity = 0.5;
       self.handR.control.material.transparent = true;
       self.handR.control.position = vector;
@@ -145,7 +145,6 @@ var Minion = function() {
       var v = mesh.geometry.vertices[ self.handR.verts[0] ].clone();
       mesh.matrixWorld.multiplyVector3( v );
       v.z = 0;
-      self.handR.control.__dirtyPosition = true;
       self.handR.control.position = v;
     }
 
@@ -153,7 +152,6 @@ var Minion = function() {
       var v = mesh.geometry.vertices[ self.handL.verts[0] ].clone();
       mesh.matrixWorld.multiplyVector3( v );
       v.z = 0;
-      self.handL.control.__dirtyPosition = true;
       self.handL.control.position = v;
     }
 

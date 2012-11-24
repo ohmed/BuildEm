@@ -78,22 +78,14 @@ var game = {
         break;
       case 'lhControl':
         minion.handL.update = false;
-        if (minion.move) clearInterval( minion.move );
-        minion.move = setInterval( function() {
-          minion.handL.control.__dirtyPosition = true;
-          minion.handL.control.position.x = ray.origin.x;
-          minion.handL.control.position.y = ray.origin.y;
-        }, 1);
+        minion.handL.control.position.x = ray.origin.x;
+        minion.handL.control.position.y = ray.origin.y;
         game.physics.action( 'move', minion );
         break;
       case 'rhControl':
         minion.handR.update = false;
-        if (minion.move) clearInterval( minion.move );
-        minion.move = setInterval( function() {
-          minion.handR.control.__dirtyPosition = true;
-          minion.handR.control.position.x = ray.origin.x;
-          minion.handR.control.position.y = ray.origin.y;
-        }, 1);
+        minion.handR.control.position.x = ray.origin.x;
+        minion.handR.control.position.y = ray.origin.y;
         game.physics.action( 'move', minion );
         break;
 

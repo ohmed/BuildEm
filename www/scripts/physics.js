@@ -19,19 +19,9 @@ game.physics = ( function () {
   var strech = function ( minion ) {
     clearInterval( strechId );
 
-    var k = 1.2;
   
     strechId = setInterval( function () {
 
-      var f = minion.handL.control.position.clone().subSelf( minion.mesh.position ).multiplyScalar( -k );
-
-      if ( f.isZero() )
-        clearInterval( strechId );
-
-      var v = minion.mesh.position.clone().subSelf( f.clone().multiplyScalar( 1 / k ) );
-      v.multiplyScalar( 1 / 40 );
-
-      minion.handL.control.position.addSelf( v );
 
     }, 50 );    
 
@@ -42,8 +32,6 @@ game.physics = ( function () {
     minion.mesh.setDamping( 0.8, 0.8 );
 
     clearInterval( moveId );
-
-    var prevC = minion.mesh.position.clone();
 
     moveId = setInterval( function () {
 
@@ -63,10 +51,11 @@ game.physics = ( function () {
     var force = new THREE.Vector3();
     minion.mesh.applyCentralImpulse( force );
     clearInterval( moveId );
+    strech( minion );
   }
 
   var catapult = function ( minion, d ) {
-    minion.mesh.setDamping( 0.1, 0.8 );
+    minion.mesh.setDamping( 0, 0.8 );
     var force = d.clone().normalize().multiplyScalar( 200 ).negate();
     minion.mesh.applyCentralImpulse( force );
   }
