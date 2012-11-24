@@ -18,8 +18,8 @@ var Minion = function() {
   this.handR = {
     control: {},
     update: true,
-    verts: [],
-    rotation: 0
+    verts: [48,49,50,51,538,539,540,541,542,543,544,545,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,576,577,578,579,580,581,582,583,584,585,586,587,588,589,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,607,611,613,617,619,623,625,629,645],
+    rotation: - Math.PI/2
   };
 
   this.legL = {
@@ -73,6 +73,17 @@ var Minion = function() {
     }, 100);
 
     /* create control RH */
+    setTimeout( function() {
+      var vector = mesh.geometry.vertices[ self.handR.verts[0] ].clone();
+      mesh.matrixWorld.multiplyVector3( vector );
+      self.handR.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}) );
+      self.handR.control.material.opacity = 0.5;
+      self.handR.control.material.transparent = true;
+      self.handR.control.position = vector;
+      self.handR.control.oid = 'rhControl';
+      self.handR.control.mid = self.id;
+      game.scene.add( self.handR.control );
+    }, 100);
 
     /* create control LL */
 
@@ -112,7 +123,6 @@ var Minion = function() {
       g.applyMatrix( new THREE.Matrix4().makeTranslation( hand.control.position.x - mesh.position.x, hand.control.position.y - mesh.position.y, 0 ) );
       for (var j = 0; j<hand.verts.length; j++) {
         v = g.vertices[j].clone();
-        v.z = mesh.position.z;
         mesh.geometry.vertices[ hand.verts[j] ] = v;
       }
 
@@ -124,6 +134,7 @@ var Minion = function() {
     }
 
     updateGand( self.handL );
+    updateGand( self.handR );
 
   };
 
@@ -131,14 +142,17 @@ var Minion = function() {
 
     var mesh = self.mesh;
 
-    /*if (param === 'handL' || param === 'mouseup') {
-      self.update();
-      if (param === 'handL') self.DetectMagnet(callback);
-    }*/
+    if (self.handR.update) {
+      var v = mesh.geometry.vertices[ self.handR.verts[0] ].clone();
+      mesh.matrixWorld.multiplyVector3( v );
+      v.z = 0;
+      self.handR.control.position = v;
+    }
 
     if (self.handL.update) {
       var v = mesh.geometry.vertices[ self.handL.verts[0] ].clone();
       mesh.matrixWorld.multiplyVector3( v );
+      v.z = 0;
       self.handL.control.position = v;
     }
 
