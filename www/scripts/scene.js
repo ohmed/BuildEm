@@ -37,9 +37,10 @@ var game = {
         game.DRAG.id = intersect[0].object.oid;
         game.DRAG.object = intersect[0].object.mid;
 
-        minion = game.minions.filter(function (el) {
-          return el.id === game.DRAG.object;
-        })[0];
+        for ( var i in game.minions ) {
+          if ( game.minions[ i ].id === game.DRAG.object )
+            minion = game.minions[ i ];
+        }
 
         game.physics.action( 'stop', minion );
         minion.mesh.__dirtyRotation = true;
@@ -72,23 +73,34 @@ var game = {
         if (minion.move) clearInterval( minion.move );
         minion.move = setInterval( function() {
           minion.mesh.__dirtyPosition = true;
-          minion.mesh.position.x = ray.origin.x;
-          minion.mesh.position.y = ray.origin.y;          
+          minion.mesh.position = ray.origin.clone();
+          minion.mesh.position.z = 0;          
         }, 5 );
         break;
       case 'lhControl':
         minion.handL.update = false;
-        minion.handL.control.position.x = ray.origin.x;
-        minion.handL.control.position.y = ray.origin.y;
+        minion.handL.control.position = ray.origin.clone();
+        minion.handL.control.position.z = 0;
+        var neighbour, nearestLimb = minion.getNearestLimb( minion.handL.control.position );
+        if ( nearestLimb ) {
+          neighbour = nearestLimb.parent;
+          minion.handL.control.position = nearestLimb.control.position.clone();
+          console.log( neighbour.id );
+        }
         game.physics.action( 'move', minion );
         break;
       case 'rhControl':
         minion.handR.update = false;
-        minion.handR.control.position.x = ray.origin.x;
-        minion.handR.control.position.y = ray.origin.y;
+        minion.handR.control.position = ray.origin.clone();
+        minion.handR.control.position.z = 0;
+        var neighbour, nearestLimb = minion.getNearestLimb( minion.handR.control.position );
+        if ( nearestLimb ) {
+          neighbour = nearestLimb.parent;
+          minion.handR.control.position = nearestLimb.control.position.clone();
+          console.log( neighbour.id );
+        }
         game.physics.action( 'move', minion );
         break;
-
       }
 
     });
@@ -105,10 +117,12 @@ var game = {
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );
         game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
-      } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
+      } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {        
         game.DRAG = { object: false, id: false };
         game.physics.action( 'stop', minion );
       }
+
+      // minion = false;
 
     });
 
@@ -178,6 +192,9 @@ var game = {
 
     game.render();
 
+    game.minions.push( new Minion() );
+    game.minions.push( new Minion() );
+    game.minions.push( new Minion() );
     game.minions.push( new Minion() );
 
     game.setHandlers();

@@ -1,7 +1,7 @@
 var Minion = function() {
   
   var self = this;
-  self.id = Minion.count++;
+  this.id = Minion.count++;
 
   this.body = {
     control: {},
@@ -12,35 +12,39 @@ var Minion = function() {
     control: {},
     update: true,
     verts: [721,722,723,724,1263,1264,1265,1266,1267,1268,1269,1270,1279,1280,1281,1282,1283,1284,1285,1286,1287,1288,1289,1290,1291,1292,1293,1294,1295,1296,1297,1298,1299,1300,1301,1302,1303,1304,1305,1306,1307,1308,1309,1310,1311,1312,1313,1314,1315,1316,1317,1318,1319,1320,1321,1322,1323,1324,1325,1326,1327,1328,1329,1330,1332,1336,1338,1342,1344,1348,1350,1354,1371],
-    rotation: - Math.PI/2
+    rotation: - Math.PI/2,
+    parent: self
   };
 
   this.handR = {
     control: {},
     update: true,
     verts: [48,49,50,51,538,539,540,541,542,543,544,545,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,576,577,578,579,580,581,582,583,584,585,586,587,588,589,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,607,611,613,617,619,623,625,629,645],
-    rotation: Math.PI/2
+    rotation: Math.PI/2,
+    parent: self
   };
 
   this.legL = {
     control: {},
     update: true,
     verts: [],
-    rotation: 0
+    rotation: 0,
+    parent: self
   };
 
   this.legR = {
     control: {},
     update: true,
     verts: [],
-    rotation: 0
+    rotation: 0,
+    parent: self
   };
 
   this.create = function() {
 
     /* create minion */
     var model = game.modelLoader.get( 'Minion1' );
-    self.mesh = new Physijs.ConeMesh( model.geometry, Physijs.createMaterial( new THREE.MeshFaceMaterial(),  .4, .6 ), 5 );
+    self.mesh = new Physijs.ConeMesh( model.geometry, Physijs.createMaterial( new THREE.MeshFaceMaterial(),  .4, .6 ), 10 );
     self.mesh.position.set( 13, 0, 0 );
     self.mesh.scale.set(1, 1, 1);
     self.mesh.oid = 'minion';
@@ -160,6 +164,21 @@ var Minion = function() {
   };
 
   this.create();
+
+  this.getNearestLimb = function ( v ) {
+    var ar = game.minions;
+    for ( var i in ar ) {
+      var minion = ar[ i ];
+      if ( minion.id === self.id ) continue;
+      if ( v.distanceTo( minion.handL.control.position ) < 1 ) {
+        return minion.handL;
+      }
+      if ( v.distanceTo( minion.handR.control.position ) < 1 ) {
+        return minion.handR;
+      }      
+    }
+    return false;
+  }
 
 };
 
