@@ -45,16 +45,20 @@ game.physics = ( function () {
 
       var axis = minion.handL.control.position;
       var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 );
-      var offset = axis.clone().subSelf( minion.mesh.position );
       var dist = axis.clone().distanceTo( minion.mesh.position );
 
       minion.update();
 
       if ( dist > 8 ) 
-        minion.mesh.applyCentralImpulse( force, offset );
+        minion.mesh.applyCentralImpulse( force );
 
     }, 50 ); 
 
+  }
+
+  var catapult = function ( minion, d ) {
+    var force = d.clone().normalize().multiplyScalar( 150 ).negate();
+    minion.mesh.applyCentralImpulse( force );
   }
 
   var action = function ( activity ) {
@@ -67,6 +71,9 @@ game.physics = ( function () {
         break;
       case 'affectAll':
         affectAll.apply( null, Array.prototype.slice.call( arguments, 1 ) );
+        break;
+      case 'catapult':
+        catapult.apply( null, Array.prototype.slice.call( arguments, 1 ) );
         break;
     }
   }

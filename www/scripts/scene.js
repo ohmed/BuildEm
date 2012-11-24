@@ -22,15 +22,15 @@ var game = {
 
   setHandlers: function() {
     
-    var mouse2D, minion;
+    var mouseMove2D, mouseUp2D, mouseDown2D, minion;
 
     $('canvas').mousedown( function() {
 
       var projector = new THREE.Projector();
-      mouse2D = new THREE.Vector3( 0, 10000, 0.5 );
-      mouse2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      mouse2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-      ray = projector.pickingRay( mouse2D.clone(), game.camera ); 
+      mouseDown2D = new THREE.Vector3( 0, 10000, 0.5 );
+      mouseDown2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      mouseDown2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      ray = projector.pickingRay( mouseDown2D.clone(), game.camera ); 
       var intersect = ray.intersectObjects( game.scene.__objects );
       if (intersect[0].object.oid) {
 
@@ -52,10 +52,10 @@ var game = {
     $('canvas').mousemove( function( event ) {
 
       var projector = new THREE.Projector();
-      mouse2D = new THREE.Vector3( 0, 10000, 0.5 );
-      mouse2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      mouse2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-      ray = projector.pickingRay( mouse2D.clone(), game.camera ); 
+      mouseMove2D = new THREE.Vector3( 0, 10000, 0.5 );
+      mouseMove2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      mouseMove2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      ray = projector.pickingRay( mouseMove2D.clone(), game.camera ); 
       var intersect = ray.intersectObjects( game.scene.__objects );
 
       if ( intersect.length && intersect[0].object.oid.indexOf('Control') !== -1 ) {
@@ -83,10 +83,15 @@ var game = {
 
     });
 
-    $('canvas').mouseup( function() {
+    $('canvas').mouseup( function( event ) {
+
+      mouseUp2D = new THREE.Vector3( 0, 10000, 0.5 );
+      mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );
+        game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
       } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
         minion.handL.update = true;
         //minion.controlsUpdate('mouseup');
