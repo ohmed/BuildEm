@@ -30,6 +30,13 @@ var Minion = function() {
   this.create = function() {
 
     /* create minion */
+    var model = game.modelLoader.get( 'Minion1' );
+    self.mesh = new Physijs.ConeMesh( model.geometry, Physijs.createMaterial( new THREE.MeshFaceMaterial(),  .4, .6 ), 5 );
+    self.mesh.position.set( 13, 0, 0 );
+    self.mesh.scale.set(1, 1, 1);
+    self.mesh.oid = 'minion';
+    self.mesh.mid = self.id;
+    game.scene.add( self.mesh );
 
     /* create control LH */
 

@@ -4,13 +4,16 @@ var DEBUG = true;
 var game = {
   
   quality: 1,
+  minions: [],
 
   showLoader: function() {
 
   },
 
   prepare: function() {
-    game.init();
+    game.modelLoader.finishCallback = game.init;
+    game.modelLoader.totalModels = 1;
+    game.modelLoader.load( { name: 'Minion1', model: 'resources/models/minion1.js' } );
   },
 
   setHandlers: function() {
@@ -34,6 +37,17 @@ var game = {
 
     /* add global light */
     game.scene.add( new THREE.AmbientLight(0xcccccc) );
+    var sunLight = new THREE.SpotLight(0xFFEDB3, 1);
+    sunLight.target.position.set(0, 0, 0);
+    sunLight.position.set(800, 600, 800);
+    sunLight.shadowBias = 0.0001;
+    sunLight.shadowDarkness = 0.3;
+    sunLight.shadowMapWidth = 2048;
+    sunLight.shadowMapHeight = 2048;
+    sunLight.shadowCameraVisible = true;
+    sunLight.castShadow = true;
+    game.scene.add( sunLight );
+
 
     /* add stage */
     game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
@@ -55,9 +69,12 @@ var game = {
     game.renderer.domElement.id = 'renderArea';
     game.renderer.domElement.style.width = '100%';
     game.renderer.domElement.style.height = '100%';
+    document.body.appendChild( game.renderer.domElement );
     game.renderer.lastFrame = Date.now();
 
     game.render();
+
+    game.minions.push( new Minion() );
 
     if (DEBUG) console.log( 'Scene INITED' );
 
