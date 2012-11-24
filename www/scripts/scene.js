@@ -77,7 +77,12 @@ var game = {
         minion.mesh.position.y = ray.origin.y;
         break;
       case 'lhControl':
-
+        minion.handL.update = false;
+        minion.handL.control.position.x = ray.origin.x;
+        minion.handL.control.position.y = ray.origin.y;
+        minion.mesh.__dirtyRotation = true;
+        minion.mesh.rotation.y = 0;
+        minion.update();
         break;
       }
 
