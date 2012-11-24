@@ -41,6 +41,7 @@ var game = {
           return el.id === game.DRAG.object;
         })[0];
 
+        game.physics.action( 'stop', minion );
         minion.mesh.__dirtyRotation = true;
         minion.mesh.rotation.y = 0;
 
@@ -55,6 +56,7 @@ var game = {
       mouseMove2D = new THREE.Vector3( 0, 10000, 0.5 );
       mouseMove2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseMove2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      mouseMove2D.z = 1;
       ray = projector.pickingRay( mouseMove2D.clone(), game.camera ); 
       var intersect = ray.intersectObjects( game.scene.__objects );
 
@@ -73,18 +75,28 @@ var game = {
           minion.mesh.position.x = ray.origin.x;
           minion.mesh.position.y = ray.origin.y;          
         }, 5 );
-        minion.mesh.position.x = ray.origin.x;
-        minion.mesh.position.y = ray.origin.y;
         break;
       case 'lhControl':
         minion.handL.update = false;
-        minion.handL.control.position.x = ray.origin.x;
-        minion.handL.control.position.y = ray.origin.y;
-        minion.mesh.__dirtyRotation = true;
-        minion.mesh.rotation.y = 0;
-        minion.update();
+        if (minion.move) clearInterval( minion.move );
+        minion.move = setInterval( function() {
+          minion.handL.control.__dirtyPosition = true;
+          minion.handL.control.position.x = ray.origin.x;
+          minion.handL.control.position.y = ray.origin.y;
+        }, 1);
         game.physics.action( 'move', minion );
         break;
+      case 'rhControl':
+        minion.handR.update = false;
+        if (minion.move) clearInterval( minion.move );
+        minion.move = setInterval( function() {
+          minion.handR.control.__dirtyPosition = true;
+          minion.handR.control.position.x = ray.origin.x;
+          minion.handR.control.position.y = ray.origin.y;
+        }, 1);
+        game.physics.action( 'move', minion );
+        break;
+
       }
 
     });
@@ -96,6 +108,7 @@ var game = {
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
       minion.handL.update = true;
+      minion.handR.update = true;
 
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );

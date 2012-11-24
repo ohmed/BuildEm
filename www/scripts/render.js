@@ -4,13 +4,12 @@ game.render = function() {
   
   for (var i in game.minions) {
     game.minions[i].updateControls();
-    if ( !game.minions[i].handL.update ) {
-      game.minions[i].update();
-      game.minions[i].mesh.__dirtyRotation = true;
-      game.minions[i].mesh.rotation.y = 0;
-      game.minions[i].mesh.rotation.z = 0;
-      game.minions[i].mesh.rotation.x = 0;
+    if ( !game.minions[i].handL.update || !game.minions[i].handR.update ) {
+      if (!game.minions[i].handR.update) game.minions[i].update( 'handR' );
+      if (!game.minions[i].handL.update) game.minions[i].update( 'handL' );
     }
+    game.minions[i].mesh.setAngularVelocity({x:0,y:0,z:0});
+    game.minions[i].mesh.setAngularFactor({x:0,y:0,z:0});
   }
 
   if (Date.now() - game.renderer.lastFrame >= 1000/12) {
