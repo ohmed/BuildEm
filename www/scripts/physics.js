@@ -57,7 +57,7 @@ game.physics = ( function () {
   }
 
   var catapult = function ( minion, d ) {
-    var force = d.clone().normalize().multiplyScalar( 150 ).negate();
+    var force = d.clone().normalize().multiplyScalar( 200 ).negate();
     minion.mesh.applyCentralImpulse( force );
   }
 

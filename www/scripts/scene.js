@@ -83,6 +83,7 @@ var game = {
         minion.mesh.__dirtyRotation = true;
         minion.mesh.rotation.y = 0;
         minion.update();
+        game.physics.action( 'move', minion );
         break;
       }
 
