@@ -122,7 +122,8 @@ var game = {
         game.physics.action( 'stop', minion );
       }
 
-      // minion = false;
+      game.DRAG = { object: false, id: false };
+      minion = false;
 
     });
 

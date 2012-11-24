@@ -53,7 +53,13 @@ game.modelLoader = {
         materials[i] = obj.materials[i].clone();
       }
 
+      var vertices = [];
+      for (var i = 0; i<obj.vertices.length; i++) {
+        vertices[i] = obj.vertices[i].clone();
+      }
+
       copy.materials = materials;
+      copy.vertices = vertices;
 
       return copy;
     }
