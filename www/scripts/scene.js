@@ -5,8 +5,10 @@ var game = {
   
   quality: 1,
   minions: [],
-  DRAG: false,
-  mouse2D: {},
+  DRAG: {
+    object: false,
+    id: false
+  },
 
   showLoader: function() {
 
@@ -20,8 +22,31 @@ var game = {
 
   setHandlers: function() {
     
+    var mouse2D, minion;
+
     $('canvas').mousedown( function() {
 
+      var projector = new THREE.Projector();
+      mouse2D = new THREE.Vector3( 0, 10000, 0.5 );
+      mouse2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      mouse2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      ray = projector.pickingRay( mouse2D.clone(), game.camera ); 
+      var intersect = ray.intersectObjects( game.scene.__objects );
+      if (intersect[0].object.oid) {
+
+        game.DRAG.id = intersect[0].object.oid;
+        game.DRAG.object = intersect[0].object.mid;
+
+        minion = game.minions.filter(function (el) {
+          return el.id === game.DRAG.object;
+        })[0];
+
+        minion.mesh.__dirtyRotation = true;
+        minion.mesh.rotation.y = 0;
+
+      }
+
+      return false;
     });
 
     $('canvas').mousemove( function( event ) {
@@ -39,9 +64,35 @@ var game = {
         document.body.style.cursor = 'default';
       }
 
+      if (!game.DRAG.object) return;
+      switch (game.DRAG.id) {
+      case 'bControl':
+        if (minion.move) clearInterval( minion.move );
+        minion.move = setInterval( function() {
+          minion.mesh.__dirtyPosition = true;
+          minion.mesh.position.x = ray.origin.x;
+          minion.mesh.position.y = ray.origin.y;          
+        }, 5 );
+        minion.mesh.position.x = ray.origin.x;
+        minion.mesh.position.y = ray.origin.y;
+        break;
+      case 'lhControl':
+
+        break;
+      }
+
     });
 
     $('canvas').mouseup( function() {
+
+      if (game.DRAG.id === 'bControl') {
+        clearInterval( minion.move );
+      } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
+        minion.handL.update = true;
+        //minion.controlsUpdate('mouseup');
+      }
+
+      game.DRAG = { object: false, id: false };
 
     });
 
@@ -80,7 +131,15 @@ var game = {
     game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
     game.stage.position.set(0, -9.8, 0);
     game.stage.scale.set( 40, 3, 400 );
-    game.scene.add( game.stage ); 
+    game.scene.add( game.stage );
+    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
+    game.stage.position.set(-20, 0, 0);
+    game.stage.scale.set( 1, 100, 100 );
+    game.scene.add( game.stage );
+    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
+    game.stage.position.set(20, 0, 0);
+    game.stage.scale.set( 1, 100, 100 );
+    game.scene.add( game.stage );
 
     /* render stat */
     var container = document.createElement( 'div' );

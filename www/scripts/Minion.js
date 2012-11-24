@@ -107,4 +107,4 @@ var Minion = function() {
 
 };
 
-Minion.count = 0;
+Minion.count = 1;
