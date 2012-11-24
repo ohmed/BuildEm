@@ -95,11 +95,13 @@ var game = {
       mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
+      minion.handL.update = true;
+
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );
         game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
       } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
-        minion.handL.update = true;
+        
         //minion.controlsUpdate('mouseup');
       }
 

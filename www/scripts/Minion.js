@@ -130,10 +130,10 @@ var Minion = function() {
 
     var mesh = self.mesh;
 
-    if (param === 'handL' || param === 'mouseup') {
+    /*if (param === 'handL' || param === 'mouseup') {
       self.update();
       if (param === 'handL') self.DetectMagnet(callback);
-    }
+    }*/
 
     if (self.handL.update) {
       var v = mesh.geometry.vertices[ self.handL.verts[0] ].clone();
