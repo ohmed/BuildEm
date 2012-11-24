@@ -36,11 +36,6 @@ var game = {
       ray = projector.pickingRay( mouseDown2D.clone(), game.camera ); 
       var intersect = ray.intersectObjects( game.scene.__objects );
 
-      if ( event.which === 3) {
-        game.minions.push( new Minion() );
-        game.minions[ game.minions.length - 1 ].mesh.position = ray.origin.clone();
-      }
-
       if (intersect[0].object.oid) {
 
         game.DRAG.id = intersect[0].object.oid;
@@ -160,10 +155,6 @@ var game = {
     /* create scene */
     game.scene = new Physijs.Scene;
     game.scene.setGravity( new THREE.Vector3( 0, -60, 0 ) );
-    game.scene.addEventListener( 'update', function() {
-      game.scene.simulate( undefined, 1 );
-      //physics_stats.update();
-    });
 
     /* adding camera */
     game.camera = new THREE.OrthographicCamera( -20, 20, 20 * window.innerHeight / window.innerWidth, -20 * window.innerHeight / window.innerWidth, - 2000, 1000 );
@@ -219,9 +210,15 @@ var game = {
     game.renderer.lastFrame = Date.now();
 
     game.render();
-    game.scene.simulate();
 
     game.setHandlers();
+
+    game.minions.push( new Minion() );
+    game.minions.push( new Minion() );
+    game.minions.push( new Minion() );
+    game.minions.push( new Minion() );
+
+    Nail.build();
 
     if (DEBUG) console.log( 'Scene INITED' );
 

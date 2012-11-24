@@ -17,6 +17,7 @@ game.render = function() {
     game.renderer.lastFrame = Date.now();
   }
 
+  game.scene.simulate( undefined, 1);
   game.stats.update();
 
 };
