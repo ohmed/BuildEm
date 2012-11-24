@@ -5,6 +5,8 @@ var game = {
   
   quality: 1,
   minions: [],
+  DRAG: false,
+  mouse2D: {},
 
   showLoader: function() {
 
@@ -17,6 +19,31 @@ var game = {
   },
 
   setHandlers: function() {
+    
+    $('canvas').mousedown( function() {
+
+    });
+
+    $('canvas').mousemove( function( event ) {
+
+      var projector = new THREE.Projector();
+      mouse2D = new THREE.Vector3( 0, 10000, 0.5 );
+      mouse2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      mouse2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      ray = projector.pickingRay( mouse2D.clone(), game.camera ); 
+      var intersect = ray.intersectObjects( game.scene.__objects );
+
+      if ( intersect.length && intersect[0].object.oid.indexOf('Control') !== -1 ) {
+        document.body.style.cursor = 'pointer';
+      } else {
+        document.body.style.cursor = 'default';
+      }
+
+    });
+
+    $('canvas').mouseup( function() {
+
+    });
 
   },
 
@@ -69,12 +96,16 @@ var game = {
     game.renderer.domElement.id = 'renderArea';
     game.renderer.domElement.style.width = '100%';
     game.renderer.domElement.style.height = '100%';
+    game.renderer.domElement.style.position = 'absolute';
+    game.renderer.domElement.style.top = '0px';
     document.body.appendChild( game.renderer.domElement );
     game.renderer.lastFrame = Date.now();
 
     game.render();
 
     game.minions.push( new Minion() );
+
+    game.setHandlers();
 
     if (DEBUG) console.log( 'Scene INITED' );
 
