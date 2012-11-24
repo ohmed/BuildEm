@@ -4,10 +4,8 @@ game.render = function() {
   
   for (var i in game.minions) {
     game.minions[i].updateControls();
-    if ( !game.minions[i].handL.update || !game.minions[i].handR.update ) {
-      if (!game.minions[i].handR.update) game.minions[i].update( 'handR' );
-      if (!game.minions[i].handL.update) game.minions[i].update( 'handL' );
-    }
+    if (!game.minions[i].handR.update) game.minions[i].update( 'handR' );
+    if (!game.minions[i].handL.update) game.minions[i].update( 'handL' );
     game.minions[i].mesh.setAngularVelocity({x:0,y:0,z:0});
     game.minions[i].mesh.setAngularFactor({x:0,y:0,z:0});
   }

@@ -17,13 +17,22 @@ game.physics = ( function () {
   }
 
   var strech = function ( minion ) {
+    
+    if (game.DRAG.id) return;
+
     clearInterval( strechId );
 
-  
     strechId = setInterval( function () {
 
+      if ( minion.handL.control.position.distanceTo( minion.mesh.position ) < 2 ) {
+        clearInterval( strechId );
+        minion.handL.update = true;
+        return;
+      }
+      minion.handL.control.position.x += ( minion.mesh.position.x - 2 - minion.handL.control.position.x ) * 0.1;
+      minion.handL.control.position.y += ( minion.mesh.position.y - minion.handL.control.position.y ) * 0.1;
 
-    }, 50 );    
+    }, 50 );
 
   }
 
@@ -35,8 +44,10 @@ game.physics = ( function () {
 
     moveId = setInterval( function () {
 
+      var dist = minion.handL.control.position.distanceTo( minion.mesh.position );
+      var forceStrength = dist / 10;
       var axis = minion.handL.control.position;
-      var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 );
+      var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 * forceStrength );
       var dist = axis.clone().distanceTo( minion.mesh.position );
 
       if ( dist > 8 ) {
