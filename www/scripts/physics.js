@@ -16,41 +16,44 @@ game.physics = ( function () {
     }
   }
 
-  var strech = function ( minion ) {
+  var strech = function ( minion, type ) {
     
     if (game.DRAG.id) return;
 
-    clearInterval( strechId );
+    clearInterval( minion.intervals[ 'strech' + type ] );
 
-    strechId = setInterval( function () {
+    minion.intervals[ 'strech' + type ] = setInterval( function () {
 
-      if ( minion.handL.control.position.distanceTo( minion.mesh.position ) < 2 ) {
-        clearInterval( strechId );
-        minion.handL.update = true;
+      if ( minion[ type ].control.position.distanceTo( minion.mesh.position ) < 2 ) {
+        clearInterval( minion.intervals[ 'strech' + type ] );
+        minion[ type ].update = true;
         return;
       }
-      minion.handL.control.position.x += ( minion.mesh.position.x - 2 - minion.handL.control.position.x ) * 0.1;
-      minion.handL.control.position.y += ( minion.mesh.position.y - minion.handL.control.position.y ) * 0.1;
+      var q;
+      if ( type === 'handL') q = -2;
+      if ( type === 'handR') q = 2;
+      minion[ type ].control.position.x += ( minion.mesh.position.x + q - minion[ type ].control.position.x ) * 0.1;
+      minion[ type ].control.position.y += ( minion.mesh.position.y - minion[ type ].control.position.y ) * 0.1;
 
     }, 50 );
 
   }
 
-  var move = function ( minion ) {
+  var move = function ( minion, type ) {
 
     minion.mesh.setDamping( 0.8, 0.8 );
 
-    clearInterval( moveId );
+    clearInterval( minion.intervals[ 'move' + type ] );
 
-    moveId = setInterval( function () {
+    minion.intervals[ 'move' + type ] = setInterval( function () {
 
-      var dist = minion.handL.control.position.distanceTo( minion.mesh.position );
-      var forceStrength = dist / 10;
-      var axis = minion.handL.control.position;
+      var dist = minion[ type ].control.position.distanceTo( minion.mesh.position );
+      var forceStrength = dist / 2;
+      var axis = minion[ type ].control.position;
       var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 * forceStrength );
       var dist = axis.clone().distanceTo( minion.mesh.position );
 
-      if ( dist > 8 ) {
+      if ( dist > 4 ) {
         minion.mesh.applyCentralImpulse( force );
       } 
 
@@ -61,8 +64,12 @@ game.physics = ( function () {
   var stop = function ( minion ) {
     var force = new THREE.Vector3();
     minion.mesh.applyCentralImpulse( force );
-    clearInterval( moveId );
-    strech( minion );
+    clearInterval( minion.intervals[ 'strechhandL' ] );
+    clearInterval( minion.intervals[ 'strechhandR' ] );
+    clearInterval( minion.intervals[ 'movehandL' ] );
+    clearInterval( minion.intervals[ 'movehandR' ] );
+    strech( minion, 'handL' );
+    strech( minion, 'handR' );
   }
 
   var catapult = function ( minion, d ) {

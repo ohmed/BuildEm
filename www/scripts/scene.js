@@ -42,7 +42,8 @@ var game = {
             minion = game.minions[ i ];
         }
 
-        game.physics.action( 'stop', minion );
+        game.physics.action( 'stop', minion, 'handL' );
+        game.physics.action( 'stop', minion, 'handR' );
         minion.mesh.__dirtyRotation = true;
         minion.mesh.rotation.y = 0;
 
@@ -74,32 +75,44 @@ var game = {
         minion.move = setInterval( function() {
           minion.mesh.__dirtyPosition = true;
           minion.mesh.position = ray.origin.clone();
-          minion.mesh.position.z = 0;          
+          minion.mesh.position.z = 0;
         }, 5 );
+        minion.handL.update = true;
+        minion.handR.update = true;
         break;
-      case 'lhControl':
+      case 'handLControl':
+        if ( minion.handL.control.position.distanceTo( minion.mesh.position ) > 5 ) {
+          minion.mesh.__dirtyPosition = true;
+          minion.mesh.position.x += ( minion.handL.control.position.x - minion.mesh.position.x ) * 0.3;
+          minion.mesh.position.y += ( minion.handL.control.position.y - minion.mesh.position.y ) * 0.3;
+        }
         minion.handL.update = false;
+        minion.handR.update = true;
         minion.handL.control.position = ray.origin.clone();
         minion.handL.control.position.z = 0;
         var neighbour, nearestLimb = minion.getNearestLimb( minion.handL.control.position );
         if ( nearestLimb ) {
           neighbour = nearestLimb.parent;
           minion.handL.control.position = nearestLimb.control.position.clone();
-          console.log( neighbour.id );
         }
-        game.physics.action( 'move', minion );
+        game.physics.action( 'move', minion, 'handL' );
         break;
-      case 'rhControl':
+      case 'handRControl':
+        if ( minion.handR.control.position.distanceTo( minion.mesh.position ) > 5 ) {
+          minion.mesh.__dirtyPosition = true;
+          minion.mesh.position.x += ( minion.handR.control.position.x - minion.mesh.position.x ) * 0.3;
+          minion.mesh.position.y += ( minion.handR.control.position.y - minion.mesh.position.y ) * 0.3;
+        }
         minion.handR.update = false;
+        minion.handL.update = true;
         minion.handR.control.position = ray.origin.clone();
         minion.handR.control.position.z = 0;
         var neighbour, nearestLimb = minion.getNearestLimb( minion.handR.control.position );
         if ( nearestLimb ) {
           neighbour = nearestLimb.parent;
           minion.handR.control.position = nearestLimb.control.position.clone();
-          console.log( neighbour.id );
         }
-        game.physics.action( 'move', minion );
+        game.physics.action( 'move', minion, 'handR' );
         break;
       }
 
@@ -117,9 +130,10 @@ var game = {
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );
         game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
-      } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {        
+      } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
         game.DRAG = { object: false, id: false };
-        game.physics.action( 'stop', minion );
+        game.physics.action( 'stop', minion, 'handR' );
+        game.physics.action( 'stop', minion, 'handL' );
       }
 
       game.DRAG = { object: false, id: false };

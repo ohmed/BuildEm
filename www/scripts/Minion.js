@@ -2,6 +2,7 @@ var Minion = function () {
 
   var self = this;
   this.id = Minion.count++;
+  this.intervals = {};
 
   this.body = {
     control: {},
@@ -55,7 +56,7 @@ var Minion = function () {
     this.body.control = new THREE.Mesh(new THREE.CubeGeometry(1.7, 1.8, 2, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
     }));
-    this.body.control.material.opacity = 0.5;
+    this.body.control.material.opacity = 0;
     this.body.control.material.transparent = true;
     this.body.control.position = this.mesh.position;
     this.body.control.oid = 'bControl';
@@ -63,35 +64,31 @@ var Minion = function () {
     game.scene.add(this.body.control);
 
     /* create control LH */
-    // setTimeout( function() {
     var vector = this.mesh.geometry.vertices[1317].clone();
     this.handL._initial = vector.clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
     this.handL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
     }));
-    this.handL.control.material.opacity = 0.5;
+    this.handL.control.material.opacity = 0;
     this.handL.control.material.transparent = true;
     this.handL.control.position = vector;
-    this.handL.control.oid = 'lhControl';
+    this.handL.control.oid = 'handLControl';
     this.handL.control.mid = this.id;
     game.scene.add(this.handL.control);
-    // }, 100);
 
     /* create control RH */
-    // setTimeout( function() {
     vector = this.mesh.geometry.vertices[this.handR.verts[0]].clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
     this.handR.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
     }));
-    this.handR.control.material.opacity = 0.5;
+    this.handR.control.material.opacity = 0;
     this.handR.control.material.transparent = true;
     this.handR.control.position = vector;
-    this.handR.control.oid = 'rhControl';
+    this.handR.control.oid = 'handRControl';
     this.handR.control.mid = this.id;
     game.scene.add(this.handR.control);
-    // }, 100);
 
     /* create control LL */
 
@@ -100,45 +97,44 @@ var Minion = function () {
 
   };
 
-  function updateHand(mesh, hand) {
-    var g, m, v, handVector;
-
-    /* move hand parts */
-
-    var handVector = mesh.geometry.vertices[hand.verts[0]].clone();
-    mesh.matrixWorld.multiplyVector3(handVector);
-
-    g = new THREE.Geometry();
-    for (var j = 0; j < hand.verts.length; j++) {
-      v = mesh.geometry.vertices[hand.verts[j]].clone();
-      mesh.matrixWorld.multiplyVector3(v);
-      v.x -= handVector.x;
-      v.y -= handVector.y;
-      g.vertices.push(v);
-    }
-    var teta = Math.atan((hand.control.position.x - mesh.position.x) / (hand.control.position.y - mesh.position.y));
-    var alpha = hand.rotation - teta;
-    hand.rotation = teta;
-    if (hand.control.position.y - mesh.position.y < 0) {
-      alpha -= Math.PI;
-      hand.rotation -= Math.PI;
-    }
-    g.applyMatrix(new THREE.Matrix4().makeRotationZ(alpha));
-    g.applyMatrix(new THREE.Matrix4().makeTranslation(hand.control.position.x - mesh.position.x, hand.control.position.y - mesh.position.y, 0));
-    for (var j = 0; j < hand.verts.length; j++) {
-      v = g.vertices[j].clone();
-      mesh.geometry.vertices[hand.verts[j]] = v;
-    }
-
-    mesh.geometry.verticesNeedUpdate = true;
-  }
-
-  function updateLeg(param) {
-
-  }
-
   this.update = function (param) {
 
+    function updateHand(mesh, hand) {
+      var g, m, v, handVector;
+
+      /* move hand parts */
+
+      var handVector = mesh.geometry.vertices[hand.verts[0]].clone();
+      mesh.matrixWorld.multiplyVector3(handVector);
+
+      g = new THREE.Geometry();
+      for (var j = 0; j < hand.verts.length; j++) {
+        v = mesh.geometry.vertices[hand.verts[j]].clone();
+        mesh.matrixWorld.multiplyVector3(v);
+        v.x -= handVector.x;
+        v.y -= handVector.y;
+        g.vertices.push(v);
+      }
+      var teta = Math.atan((hand.control.position.x - mesh.position.x) / (hand.control.position.y - mesh.position.y));
+      var alpha = hand.rotation - teta;
+      hand.rotation = teta;
+      if (hand.control.position.y - mesh.position.y < 0) {
+        alpha -= Math.PI;
+        hand.rotation -= Math.PI;
+      }
+      g.applyMatrix(new THREE.Matrix4().makeRotationZ(alpha));
+      g.applyMatrix(new THREE.Matrix4().makeTranslation(hand.control.position.x - mesh.position.x, hand.control.position.y - mesh.position.y, 0));
+      for (var j = 0; j < hand.verts.length; j++) {
+        v = g.vertices[j].clone();
+        mesh.geometry.vertices[hand.verts[j]] = v;
+      }
+
+      mesh.geometry.verticesNeedUpdate = true;
+    }
+
+    function updateLeg(param) {
+
+    }
 
     updateHand(this.mesh, this[param]);
 
