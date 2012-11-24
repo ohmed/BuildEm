@@ -54,7 +54,7 @@ var game = {
 
     /* create scene */
     game.scene = new Physijs.Scene;
-    game.scene.setGravity( new THREE.Vector3( 0, -30, 0 ) );
+    game.scene.setGravity( new THREE.Vector3( 0, -40, 0 ) );
 
     /* adding camera */
     game.camera = new THREE.OrthographicCamera( -20, 20, 20 * window.innerHeight / window.innerWidth, -20 * window.innerHeight / window.innerWidth, - 2000, 1000 );

@@ -3,6 +3,19 @@ game.physics = ( function () {
   var moveId = null;
   var strechId = null;
 
+  var _visited = [];
+
+  var affectAll = function ( minion ) {
+    if ( _visited.indexOf( minion.id ) !== -1 ) return;
+
+    _visited.push( minion.id );
+    console.log( 'affected(', minion.id, ')' );
+
+    for ( var i in minion.neigbours ) {
+      affectAll( minion.neigbours[ i ] );
+    }
+  }
+
   var strech = function ( minion ) {
     if ( strechId !== null ) clearInterval( strechId );
 
@@ -51,6 +64,9 @@ game.physics = ( function () {
         break; 
       case 'strech':
         strech.apply( null, Array.prototype.slice.call( arguments, 1 ) );
+        break;
+      case 'affectAll':
+        affectAll.apply( null, Array.prototype.slice.call( arguments, 1 ) );
         break;
     }
   }
