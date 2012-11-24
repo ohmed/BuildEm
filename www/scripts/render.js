@@ -8,6 +8,8 @@ game.render = function() {
     if (!game.minions[i].handL.update) game.minions[i].update( 'handL' );
     game.minions[i].mesh.setAngularVelocity({x:0,y:0,z:0});
     game.minions[i].mesh.setAngularFactor({x:0,y:0,z:0});
+    game.minions[i].mesh.__dirtyPosition = true;
+    game.minions[i].mesh.position.z = 0;
   }
 
   if (Date.now() - game.renderer.lastFrame >= 1000/12) {
@@ -15,7 +17,6 @@ game.render = function() {
     game.renderer.lastFrame = Date.now();
   }
 
-  game.scene.simulate( undefined, 1);
   game.stats.update();
 
 };

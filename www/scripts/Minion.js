@@ -45,7 +45,7 @@ var Minion = function () {
 
     /* create minion */
     var model = game.modelLoader.get('Minion1');
-    this.mesh = new Physijs.ConeMesh(model.geometry, Physijs.createMaterial(new THREE.MeshFaceMaterial(), .4, .6), 10);
+    this.mesh = new Physijs.ConeMesh(model.geometry, Physijs.createMaterial(new THREE.MeshFaceMaterial(), .5, .8), 10);
     this.mesh.position.set(13, 0, 0);
     this.mesh.scale.set(1, 1, 1);
     this.mesh.oid = 'minion';
