@@ -73,6 +73,7 @@ var game = {
       }
 
       if (!game.DRAG.object) return;
+
       switch (game.DRAG.id) {
       case 'bControl':
         if (minion.move) clearInterval( minion.move );
@@ -128,8 +129,11 @@ var game = {
       mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-      //minion.handL.update = true;
-      //minion.handR.update = true;
+      if ( minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position ) ) {
+        game.DRAG = { object: false, id: false };
+        minion = false;
+        return;
+      }
 
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );

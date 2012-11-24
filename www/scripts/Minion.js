@@ -178,6 +178,18 @@ var Minion = function () {
     return false;
   }
 
+  this.getNearestNail = function( v ) {
+    var ar = game.nails;
+    for (var i in ar) {
+      var nail = ar[i];
+      if (nail.id === this.id) continue;
+      if (v.distanceTo(nail.mesh.position) < 1) {
+        return nail;
+      }
+    }
+    return false;
+  }
+
 };
 
 Minion.count = 1;
