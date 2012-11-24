@@ -12,7 +12,7 @@ var Minion = function() {
     control: {},
     update: true,
     verts: [721,722,723,724,1263,1264,1265,1266,1267,1268,1269,1270,1279,1280,1281,1282,1283,1284,1285,1286,1287,1288,1289,1290,1291,1292,1293,1294,1295,1296,1297,1298,1299,1300,1301,1302,1303,1304,1305,1306,1307,1308,1309,1310,1311,1312,1313,1314,1315,1316,1317,1318,1319,1320,1321,1322,1323,1324,1325,1326,1327,1328,1329,1330,1332,1336,1338,1342,1344,1348,1350,1354,1371],
-    rotation: 0
+    rotation: - Math.PI/2
   };
 
   this.handR = {
@@ -81,6 +81,48 @@ var Minion = function() {
   };
 
   this.update = function() {
+
+    var mesh = self.mesh;
+
+    function updateGand( hand ) {
+      var g, m, v, handVector;
+
+      /* move hand parts */
+
+      var handVector = mesh.geometry.vertices[ hand.verts[0] ].clone();
+      mesh.matrixWorld.multiplyVector3( handVector );
+
+      g = new THREE.Geometry();
+      for (var j = 0; j<hand.verts.length; j++) {
+        v = mesh.geometry.vertices[ hand.verts[j] ].clone();
+        mesh.matrixWorld.multiplyVector3( v );
+        v.x -= handVector.x;
+        v.y -= handVector.y;
+        g.vertices.push( v );
+      }
+      var teta = Math.atan( (hand.control.position.x - mesh.position.x) / (hand.control.position.y - mesh.position.y) );
+      var alpha = hand.rotation - teta;
+      hand.rotation = teta;
+      if (hand.control.position.y - mesh.position.y < 0) {
+        alpha -= Math.PI;
+        hand.rotation -= Math.PI;
+      }
+      g.applyMatrix( new THREE.Matrix4().makeRotationZ( alpha ) );
+      g.applyMatrix( new THREE.Matrix4().makeTranslation( hand.control.position.x - mesh.position.x, hand.control.position.y - mesh.position.y, 0 ) );
+      for (var j = 0; j<hand.verts.length; j++) {
+        v = g.vertices[j].clone();
+        v.z = mesh.position.z;
+        mesh.geometry.vertices[ hand.verts[j] ] = v;
+      }
+
+      mesh.geometry.verticesNeedUpdate = true;
+    }
+
+    function updateLeg( param ) {
+
+    }
+
+    updateGand( self.handL );
 
   };
 
