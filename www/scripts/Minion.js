@@ -61,6 +61,7 @@ var Minion = function() {
     /* create control LH */
     setTimeout( function() {
       var vector = mesh.geometry.vertices[1317].clone();
+      self.handL._initial = vector.clone();
       mesh.matrixWorld.multiplyVector3( vector );
       self.handL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({color: 0xff0000}) );
       self.handL.control.material.opacity = 0.5;

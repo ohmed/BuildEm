@@ -17,7 +17,7 @@ game.physics = ( function () {
   }
 
   var strech = function ( minion ) {
-    if ( strechId !== null ) clearInterval( strechId );
+    clearInterval( strechId );
 
     var k = 1.2;
   
