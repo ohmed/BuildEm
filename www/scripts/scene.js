@@ -19,7 +19,6 @@ var game = {
     game.modelLoader.finishCallback = game.init;
     game.modelLoader.totalModels = 1;
     game.modelLoader.load( { name: 'Minion1', model: 'resources/models/minion1.js' } );
-    $('.gears').show();
   },
 
   setHandlers: function() {
@@ -47,6 +46,8 @@ var game = {
           if ( game.minions[ i ].id === game.DRAG.object )
             minion = game.minions[ i ];
         }
+
+        game.physics.action( 'stop', minion );
 
         minion.mesh.__dirtyRotation = true;
         minion.mesh.rotation.y = 0;
@@ -86,6 +87,10 @@ var game = {
           minion.mesh.position.z = 0;
         }, 5 );
 
+        clearInterval( minion.intervals[ 'movehandR' ] );
+        clearInterval( minion.intervals[ 'movehandL' ] );
+        clearInterval( minion.intervals[ 'movelegR' ] );
+        clearInterval( minion.intervals[ 'movelegF' ] );
         if ( minion.neighbours.handL.neighbour || minion.handL.nailed ) minion.handL.update = false;
         if ( minion.neighbours.handR.neighbour || minion.handR.nailed ) minion.handR.update = false;
         if ( minion.neighbours.legL.neighbour || minion.legL.nailed ) minion.legL.update = false;
@@ -120,6 +125,7 @@ var game = {
           minion = false;
           return;
         }
+        clearInterval( minion.intervals[ 'movehandL' ] );
         game.physics.action( 'move', minion, 'handL' );
         break;
       case 'handRControl':
@@ -151,6 +157,7 @@ var game = {
           minion = false;
           return;
         }
+        clearInterval( minion.intervals[ 'movehandR' ] );
         game.physics.action( 'move', minion, 'handR' );
         break;
       case 'legLControl':
@@ -287,9 +294,9 @@ var game = {
 
 
     /* add stage */
-    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 23, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
-    game.stage.position.set(0, -20, 0);
-    game.stage.scale.set( 40, 1, 400 );
+    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
+    game.stage.position.set(0, -9.8, 0);
+    game.stage.scale.set( 40, 3, 400 );
     game.scene.add( game.stage );
     game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
     game.stage.position.set(-20, 0, 0);
@@ -323,7 +330,37 @@ var game = {
 
     game.setHandlers();
 
-    Minion.queue();
+    var m = new Minion();
+    m.mesh.position.x -= 5;
+    game.minions.push( m );
+    m.group = 0;
+    game.groups[0] = [];
+    game.groups[0].push( m.id-1 );
+
+    m = new Minion();
+    game.minions.push( m );
+    m.group = 1;
+    game.groups[1] = [];
+    game.groups[1].push( m.id-1 );
+
+    m = new Minion();
+    game.minions.push( m );
+    m.group = 2;
+    game.groups[2] = [];
+    game.groups[2].push( m.id-1 );
+
+    m = new Minion();
+    game.minions.push( m );
+    m.group = 3;
+    game.groups[3] = [];
+    game.groups[3].push( m.id-1 );
+
+    m = new Minion();
+    game.minions.push( m );
+    m.group = 4;
+    game.groups[4] = [];
+    game.groups[4].push( m.id-1 );
+
 
     Nail.build();
 

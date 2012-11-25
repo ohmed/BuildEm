@@ -35,8 +35,8 @@ game.physics = ( function () {
         0
       );
 
-      minion[ i ].control.position = newPos;
-      neighbour[type].control.position = newPos;
+      minion[ i ].control.position = newPos.clone();
+      neighbour[type].control.position = newPos.clone();
       
       minion.mesh.applyImpulse( minion.mesh.position.clone().subSelf( neighbour[type].control.position ).negate().normalize().multiplyScalar( 5 ), minion.mesh.position.clone().subSelf( neighbour[type].control.position ) );
 

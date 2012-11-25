@@ -73,12 +73,13 @@ var Minion = function () {
     /* create minion */
     var model = game.modelLoader.get('Minion1');
     this.mesh = new Physijs.ConeMesh(model.geometry, Physijs.createMaterial(new THREE.MeshFaceMaterial(), .5, .8), 10);
-    this.mesh.position.set( v.x, v.y, v.z);
-    this.mesh.rotation.set( r.x, r.y, r.z);
+    //this.mesh.position.set( v.x, v.y, v.z);
+    //this.mesh.rotation.set( r.x, r.y, r.z);
+    this.mesh.position.x = 5 + self.id * 3;
     this.mesh.scale.set(1, 1, 1);
     this.mesh.oid = 'minion';
     this.mesh.mid = this.id;
-    this.mesh.visible = false;
+    //this.mesh.visible = false;
     game.scene.add(this.mesh);
 
     /* create control Body */
@@ -118,7 +119,7 @@ var Minion = function () {
     this.handR.control.mid = this.id;
     game.scene.add(this.handR.control);
 
-    vector = this.mesh.geometry.vertices[1317].clone();//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    vector = this.mesh.geometry.vertices[this.legL.verts[0]].clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
     this.legL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0x0000ff
@@ -279,23 +280,25 @@ var Minion = function () {
     for (var i in ar) {
       var nail = ar[i];
       if (nail.id === this.id) continue;
-      if (v.distanceTo(nail.mesh.position) < 1) {
+      if (v.distanceTo(nail.mesh.position) < 3) {
         return nail;
       }
     }
     return false;
   }
 
+  this.create();
+
 };
 
 Minion.count = 1;
 
-Minion.queue = function () {
+/*Minion.queue = function () {
   var ar = [];
 
-  for ( var i = 0; i < 8; i++ ) {
+  for ( var i = 0; i < 5; i++ ) {
     var angle = i === 7 ? -2 * Math.PI : -Math.PI / 2;
-    var minion = new Minion().create( new THREE.Vector3( 20 - (i + 1) * 2, -7, 0 ), new THREE.Vector3( 0, angle, 0 ) );
+    var minion = new Minion().create( new THREE.Vector3( 20 - (i + 1) * 2, -7, 80 * Math.random() ), new THREE.Vector3( 0, angle, 0 ) );
     minion.group = i;
     game.groups[i] = [];
     game.groups[i].push( minion.id-1 );
@@ -304,4 +307,4 @@ Minion.queue = function () {
   }
 
   game.minions = ar;
-}
+}*/

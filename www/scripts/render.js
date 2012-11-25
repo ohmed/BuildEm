@@ -22,15 +22,43 @@ game.render = function() {
 
     function checkConnection( param ) {
       self = game.minions[i];
-      if ( self[param].control.position.distanceTo( self.mesh.position ) > 5 && (self[param].nailed || self.neighbours[param].neighbour) ) {
+      var s = self.neighbours[param] || false;
+      if ( self[param].control.position.distanceTo( self.mesh.position ) > 7 && (self[param].nailed || self.neighbours[param].neighbour) ) {
         if (self[param].nailed) self[param].update = false;
         self[param].nailed = false;
-        if ( self.neighbours[param].neighbour ) {
-          self[param].update = false;
+        clearInterval( self.intervals[ 'move' + param ] );
+
+        if ( s && s.neighbour ) {
           self.neighbours[param].neighbour.neighbours[ self.neighbours[param].name ] = {'neighbour': null,'name': null};
           self.neighbours[param] = {'neighbour': null,'name': null};
+          self[param].update = false;
+          s.neighbour[s.name].update = false;
+
+          if (!self.neighbours['handL'].name && !self.neighbours['handR'].name && !self.neighbours['legL'].name && !self.neighbours['legR'].name) {
+            game.groups.push( [self.id  ] );
+            for (var p = 0; p<game.groups[ self.group ].length; p++) {
+              if ( game.groups[ self.group ][ p ] == self.id - 1 ) {
+                game.groups[ self.group ].splice( p, 1 );
+                break;
+              }
+            }
+            self.group = game.groups.length - 1;
+          }
+
+          if (!s.neighbour.neighbours['handL'].name && !s.neighbour.neighbours['handR'].name && !s.neighbour.neighbours['legL'].name && !s.neighbour.neighbours['legR'].name) {
+            game.groups.push( [ s.neighbour.id ] );
+            for (var p = 0; p<game.groups[ s.neighbour.group ].length; p++)
+              if ( game.groups[ s.neighbour.group ][ p ] == s.neighbour.id - 1 ) {
+                game.groups[ s.neighbour.group ].splice( p, 1 );
+                break;
+              }
+            s.neighbour.group = game.groups.length - 1;
+          }
+
         }
+
         game.physics.strech( self, param );
+        if (s && s.neighbour) game.physics.strech( s.neighbour, s.name );
       }
     }
 
