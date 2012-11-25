@@ -231,6 +231,9 @@ var game = {
 
     game.setHandlers();
 
+    var m = new Minion();
+    m.mesh.position.x -= 5;
+    game.minions.push( m );
     game.minions.push( new Minion() );
     game.minions.push( new Minion() );
 

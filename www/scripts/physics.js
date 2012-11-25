@@ -11,9 +11,9 @@ game.physics = ( function () {
     minion = minion || game.minions[ 0 ];
 
     if ( _visited.indexOf( minion.id ) !== -1 ) {
-      _visited.push( minion.id );
-      if ( _visited.length === game.minions.length) {
+      if ( _visited.length === game.minions.length ) {
         _visited.length = 0;
+        return;
       } else {
         return;
       }
@@ -28,9 +28,12 @@ game.physics = ( function () {
 
       neighbour[type].control.update = false;
       neighbour[type].control.position = minion[ i ].control.position.clone();
-
+      
+      _visited.push( minion.id );
       affectAll( neighbour );
+
     }
+
   }
 
   var aId = setInterval( function () {
