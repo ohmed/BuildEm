@@ -20,6 +20,8 @@ var game = {
     game.modelLoader.totalModels = 1;
     game.modelLoader.load( { name: 'Minion1', model: 'resources/models/minion1.js' } );
     $('.gears').show();
+    $('.startBtn, .warning').hide();
+    $('body').css('background','white');
   },
 
   setHandlers: function() {

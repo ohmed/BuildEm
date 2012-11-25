@@ -17,40 +17,91 @@
     <script src="scripts/Nail.js" ></script>
     <script src="scripts/physics.js" ></script>
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        overflow: hidden;
-      }
-      .gears {
-        position: absolute;
-        width: 344px;
-        height: 341px;
-        bottom: -20%;
-        left: 10%;
-        display: none;
-      }
-      .gears img {
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        margin: 0px;
-      }
+         html {
+          background-color: #aaa;
+          width: 100%;
+        }
+
+        body {
+          position: absolute;
+          margin: 0px;
+          top: 0px;
+          left: 0px;
+          background-color: #000;
+          width: 100%;
+          height: 100%;
+          -webkit-transition: background-color 3000ms ease-out;
+          overflow: hidden;
+        }
+
+        .main {
+          position: absolute;
+          left: 0px;
+          top: 0px;
+          width: 100%;
+          height: 100%;
+        }
+
+        .startBtn {
+          position: absolute;
+          top: 180px;
+          left: 100px;
+          width: 100px;
+          height: 25px;
+          padding-top: 5px;
+          background-color: #FFED1F;
+          border-radius: 4px;
+          text-align: center;
+          color: #000;
+          font: normal 18px arial,sans-serif;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+          overflow: hidden;
+          z-index: 1111;
+
+          -webkit-box-shadow: #746B04 0px 0px 35px 12px; 
+          -moz-box-shadow: #746B04 0px 0px 35px 12px; 
+          box-shadow: #746B04 0px 0px 35px 12px; 
+        }
+
+        .warning {
+          position: absolute;
+          z-index: 99;
+          width: 60%;
+          height: 50%;
+          background: transparent;
+          color: white;
+          padding: 19% 10%;
+        }
+
+        .warning img{
+          width: 100px;
+          height: 100px;
+          position: absolute;
+          z-index: -1;
+          margin: 25% 75%;
+        }
+
+        .gears {
+          position: absolute;
+          width: 344px;
+          height: 341px;
+          bottom: -20%;
+          left: 10%;
+          display: none;
+        }
+        .gears img {
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          margin: 0px;
+        }
     </style>
   </head>
 
   <body>
 
-    <div class="button" onclick="game.prepare()" >START</div>
+    <div class="startBtn">START</div>
     <div class="gears"> 
         <img src="resources/gears.gif" style="z-index:1;left: 5%;top:5%;"/>
         <img src="resources/gears.gif" style="z-index:2;left: 12%;"/>
@@ -58,6 +109,9 @@
         <img src="resources/gears.gif" style="z-index:1;left: 35%;top:5%;"/>
         <img src="resources/gears.gif" style="z-index:2;left: 42%;"/>
         <img src="resources/gears.gif" style="z-index:3;left: 55%;top:5%;"/>
+    </div>
+    <div class="warning"> 
+        <img src="resources/gears.gif"/>
     </div>
 
   </body>

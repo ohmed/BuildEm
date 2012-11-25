@@ -4,7 +4,7 @@
 
   var fx = {};
 
-  // fx['menu'] = new Audio('resources/sounds/menu.ogg');
+  fx['banana'] = new Audio('resources/banana.ogg');
 
   function _play( name, volume ) {
     volume = volume || 1;
