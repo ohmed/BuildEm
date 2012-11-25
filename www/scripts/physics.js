@@ -119,14 +119,28 @@ game.physics = ( function () {
 
   var run = function ( minion ) {    
     minion.mesh.setDamping( 0.3, 0.8 );      
-    var end = new THREE.Vector3( -15, -9.8, 0 );
+    var end = new THREE.Vector3( -35, 35, 0 );
     var angle = Math.atan2( minion.mesh.position.z, minion.mesh.position.y - end.y ) - Math.PI / 2;
     minion.mesh.rotation.y = angle;
     minion.mesh.rotation.x = 0;
     minion.mesh.__dirtyRotation = true;
-    setInterval(function () {
+    var id_ = setInterval(function () {
       minion.mesh.applyCentralImpulse( end.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 30 ) );
+      if ( minion.mesh.position.x < -10 ) {
+        clearInterval( id_ );
+        stop( game.minions[ i ] );
+      }
     }, 50);      
+  }
+
+  var banana = function () {
+    /* create minion */
+    var model = game.modelLoader.get('Minion2');
+    var mesh = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial());
+    mesh.position.x = -20;
+    mesh.position.y = -7;
+    mesh.scale.set(1, 1, 1);
+    game.scene.add(mesh);
   }
 
   var action = function ( activity ) {
@@ -147,16 +161,16 @@ game.physics = ( function () {
         stop.apply( null, Array.prototype.slice.call( arguments, 1 ) );
         break;
       case 'stopAll':
-        for ( var i in game.minions ) {
-          stop( game.minions[ i ] );
-          game.minions[i].mesh.setAngularVelocity( { x: 1, y: 1, z: 1 } );
-          game.minions[i].mesh.setAngularFactor( { x: 1, y: 1, z: 1 } );
-          game.minions[ i ].mesh.position.z += Math.random() * 4 - 1;
-          game.minions[ i ].mesh.__dirtyPosition = true;
-        }
-        for ( var i in game.minions ) {
+        for ( var i in game.minions ) {          
+          // game.minions[i].mesh.setAngularVelocity( { x: 1, y: 1, z: 1 } );
+          // game.minions[i].mesh.setAngularFactor( { x: 1, y: 1, z: 1 } );
+          // game.minions[ i ].mesh.position.z += Math.random() * 4 - 1;
+          // game.minions[ i ].mesh.__dirtyPosition = true;
           run( game.minions[ i ] );
         }
+        break;
+      case 'banana':
+        banana();
         break;
     }
   }
