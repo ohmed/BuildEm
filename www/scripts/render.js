@@ -71,13 +71,26 @@ game.render = function() {
 
   }
 
+  for (var i = 0; i<game.minions.length; i++) {
+    if (game.minions[i].mesh.position.y < -2 || game.DRAG.id) {
+      continue;
+    }
+    if ( i+1 == game.minions.length ) {
+
+      game.WON();
+
+    }
+  }
+
   if (Date.now() - game.renderer.lastFrame >= 1000/12) {
     game.renderer.render( game.scene, game.camera );
     game.renderer.lastFrame = Date.now();
   }
 
-  game.scene.simulate( undefined, 1);
-  requestAnimationFrame( game.render );
-  game.stats.update();
+  if (!game.finish) {
+    game.scene.simulate( undefined, 1);
+    requestAnimationFrame( game.render );
+    game.stats.update();
+  }
 
 };

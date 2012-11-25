@@ -6,6 +6,7 @@ var game = {
   quality: 1,
   minions: [],
   groups: [],
+  finish: false,
   DRAG: {
     object: false,
     id: false
@@ -338,7 +339,6 @@ var game = {
     game.setHandlers();
 
     var m = new Minion();
-    m.mesh.position.x -= 5;
     game.minions.push( m );
     m.group = 0;
     game.groups[0] = [];
@@ -362,17 +362,22 @@ var game = {
     game.groups[3] = [];
     game.groups[3].push( m.id-1 );
 
-    m = new Minion();
+    /*m = new Minion();
     game.minions.push( m );
     m.group = 4;
     game.groups[4] = [];
-    game.groups[4].push( m.id-1 );
+    game.groups[4].push( m.id-1 );*/
 
 
     Nail.build();
 
     if (DEBUG) console.log( 'Scene INITED' );
 
+  },
+
+  WON: function() {
+    game.finish = true;
+    alert('YOU WON!');
   }
 
 };
