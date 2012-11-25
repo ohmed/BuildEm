@@ -2,7 +2,7 @@ game.render = function() {
 
   for (var k = 0; k<game.groups.length; k++) {
     _visited.length = 0;
-    if (game.groups[k].length>0) {
+    if (game.groups[k].length>0 && game.minions[ game.groups[k][0] ]) {
       var min = game.minions[ game.groups[k][0] ].mesh.position.y;
       var minID = 0;
       game.physics.affectAll( game.minions[ game.groups[k][0] ], game.groups[k].length );
@@ -35,11 +35,11 @@ game.render = function() {
           self.neighbours[param] = {'neighbour': null,'name': null};
           self[param].update = false;
           s.neighbour[s.name].update = false;
-
           if (!self.neighbours['handL'].name && !self.neighbours['handR'].name && !self.neighbours['legL'].name && !self.neighbours['legR'].name) {
-            game.groups.push( [ self.id ] );
+            game.groups.push( [ self.id - 1 ] );
             for (var p = 0; p<game.groups[ self.group ].length; p++) {
               if ( game.groups[ self.group ][ p ] == self.id - 1 ) {
+                //console.log(p);
                 game.groups[ self.group ].splice( p, 1 );
                 break;
               }
@@ -48,7 +48,7 @@ game.render = function() {
           }
 
           if (!s.neighbour.neighbours['handL'].name && !s.neighbour.neighbours['handR'].name && !s.neighbour.neighbours['legL'].name && !s.neighbour.neighbours['legR'].name) {
-            game.groups.push( [ s.neighbour.id ] );
+            game.groups.push( [ s.neighbour.id - 1 ] );
             for (var p = 0; p<game.groups[ s.neighbour.group ].length; p++)
               if ( game.groups[ s.neighbour.group ][ p ] == s.neighbour.id - 1 ) {
                 game.groups[ s.neighbour.group ].splice( p, 1 );
@@ -69,18 +69,6 @@ game.render = function() {
     checkConnection( 'legL' );
     checkConnection( 'legR' );
 
-  }
-
-  for (var i = 0; i<game.minions.length; i++) {
-    if (game.minions[i].mesh.position.y < -1 || game.DRAG.id) {
-      break;
-    }
-    if (game.minions[i].mesh.position.x < 3 && game.minions[i].mesh.position.y < 0) {
-      game.LOSE();
-    }
-    if ( i+1 == game.minions.length ) {
-      game.WON();
-    }
   }
 
   if (Date.now() - game.renderer.lastFrame >= 1000/12) {

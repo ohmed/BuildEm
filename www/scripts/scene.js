@@ -240,7 +240,9 @@ var game = {
       mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-      var nail = minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position );
+      if ( game.DRAG.id && game.DRAG.id !== 'bControl' ) {
+        var nail = minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position );
+      }
 
       if ( ( game.DRAG.id.replace('Control', '').indexOf('hand') !== -1 || game.DRAG.id.replace('Control', '').indexOf('leg') !== -1 ) && nail )  {
         nail.mesh.material.color = 0x0000ff;
@@ -318,6 +320,12 @@ var game = {
     game.stage.scale.set( 1, 100, 100 );
     game.scene.add( game.stage );
 
+    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
+    game.stage.position.set(3, -6, 0);
+    game.stage.rotation.z = -0.3;
+    game.stage.scale.set( 0.5, 7, 100 );
+    game.scene.add( game.stage );
+
     /* render stat */
     var container = document.createElement( 'div' );
     document.body.appendChild( container );
@@ -373,6 +381,22 @@ var game = {
 
 
     Nail.build();
+
+    game.state = setInterval( function() {
+      for (var i = 0; i<game.minions.length; i++) {
+        if (game.minions[i].mesh.position.y < -1 || game.DRAG.id) {
+          break;
+        }
+        if ( i+1 == game.minions.length ) {
+          game.WON();
+          clearInterval( game.state );
+        }
+        if (game.minions[i].mesh.position.x < 3 && game.minions[i].mesh.position.y < 0) {
+          game.LOSE();
+          clearInterval( game.state );
+        }
+      }
+    }, 5000);
 
     if (DEBUG) console.log( 'Scene INITED' );
 
