@@ -18,8 +18,9 @@ var game = {
 
   prepare: function() {
     game.modelLoader.finishCallback = game.init;
-    game.modelLoader.totalModels = 1;
+    game.modelLoader.totalModels = 2;
     game.modelLoader.load( { name: 'Minion1', model: 'resources/models/minion1.js' } );
+    game.modelLoader.load( { name: 'Minion2', model: 'resources/models/minion2.js' } );
     $('.gears').show();
     $('.startBtn, .warning').hide();
     $('body').css('background','white');
@@ -311,10 +312,10 @@ var game = {
     game.stage.position.set(0, -20, 0);
     game.stage.scale.set( 40, 1, 400 );
     game.scene.add( game.stage );
-    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
-    game.stage.position.set(-20, 0, 0);
-    game.stage.scale.set( 1, 100, 100 );
-    game.scene.add( game.stage );
+    game.stage1 = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
+    game.stage1.position.set(-20, 0, 0);
+    game.stage1.scale.set( 1, 100, 100 );
+    game.scene.add( game.stage1 );
     game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
     game.stage.position.set(20, 0, 0);
     game.stage.scale.set( 1, 100, 100 );
@@ -384,16 +385,18 @@ var game = {
 
     game.state = setInterval( function() {
       for (var i = 0; i<game.minions.length; i++) {
-        if (game.minions[i].mesh.position.y < -1 || game.DRAG.id) {
+        if (game.minions[i].mesh.position.x < 3 && game.minions[i].mesh.position.y < -3) {
+          game.LOSE();
+          clearInterval( game.state );
+          return;
+        }
+        if (game.minions[i].mesh.position.y < -2 || game.DRAG.id) {
           break;
         }
         if ( i+1 == game.minions.length ) {
           game.WON();
           clearInterval( game.state );
-        }
-        if (game.minions[i].mesh.position.x < 3 && game.minions[i].mesh.position.y < 0) {
-          game.LOSE();
-          clearInterval( game.state );
+          return;
         }
       }
     }, 5000);
@@ -403,13 +406,17 @@ var game = {
   },
 
   WON: function() {
-    game.finish = true;
-    alert('YOU WON!');
+    game.finish = 1;
+    game.stage1.__dirtyPosition = true;
+    game.stage1.position.y += 100;
+    game.physics.action( 'banana' );
+    setTimeout( function() { alert('YOU WON!'); }, 19000 );
   },
 
   LOSE: function () {
-    game.finish = true;
-    alert('YOU LOSE!');
+    game.finish = 2;
+    for (var p = 0; p<game.minions.length; p++) game.physics.action( 'stop', game.minions[p] );
+    setTimeout( function() { alert('YOU LOSE!'); }, 2000 );
   }
 
 };

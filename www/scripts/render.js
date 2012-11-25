@@ -76,10 +76,42 @@ game.render = function() {
     game.renderer.lastFrame = Date.now();
   }
 
-  if (!game.finish) {
-    game.scene.simulate( undefined, 1);
-    requestAnimationFrame( game.render );
-    game.stats.update();
+  if (game.finish === 1) {
+    var mesh = game.banana;
+    var interpolation = mesh.duration / mesh.keyframes;
+    var time = Date.now() % mesh.duration;
+    mesh.keyframe = Math.floor( time / interpolation );
+    if ( mesh.keyframe != mesh.currentKeyframe ) {
+      mesh.count++;
+      mesh.morphTargetInfluences[ mesh.lastKeyframe ] = 0;
+      mesh.lastKeyframe = mesh.currentKeyframe;
+      mesh.currentKeyframe = mesh.keyframe;
+      if (mesh.count == 9) {
+        game.finish = -1;
+        var hadRotCount = 0;
+        var rotHand = setInterval( function() {
+          game.minions[ hadRotCount ].mesh.__dirtyRotation = true;
+          game.minions[ hadRotCount ].mesh.rotation.y = -Math.PI / 2;
+          hadRotCount++;
+          if (hadRotCount - 1 === game.minions.length) clearInterval( rotHand );
+        }, 800);
+        setTimeout( function() {
+          audio.play( 'banana' );
+          setInterval( function() { game.banana.position.x -= 0.1; }, 50 );
+          setTimeout( function() { 
+            game.scene.remove( game.nails[0].mesh );
+            game.physics.action( 'stopAll' );
+          }, 1500 );
+        }, 3000);
+      }
+    }
+    mesh.position.x += 0.01;
+    mesh.morphTargetInfluences[ mesh.keyframe ] = ( time % interpolation ) / interpolation;
+    mesh.morphTargetInfluences[ mesh.lastKeyframe ] = 1 - mesh.morphTargetInfluences[ mesh.keyframe ];
   }
+
+  game.scene.simulate( undefined, 1);
+  requestAnimationFrame( game.render );
+  game.stats.update();
 
 };

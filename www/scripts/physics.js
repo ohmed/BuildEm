@@ -121,12 +121,10 @@ game.physics = ( function () {
     minion.mesh.setDamping( 0.3, 0.8 );      
     var end = new THREE.Vector3( -35, 35, 0 );
     var angle = Math.atan2( minion.mesh.position.z, minion.mesh.position.y - end.y ) - Math.PI / 2;
-    minion.mesh.rotation.y = angle;
     minion.mesh.rotation.x = 0;
-    minion.mesh.__dirtyRotation = true;
     var id_ = setInterval(function () {
       minion.mesh.applyCentralImpulse( end.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 30 ) );
-      if ( minion.mesh.position.x < -10 ) {
+      if ( minion.mesh.position.x < -100 ) {
         clearInterval( id_ );
         stop( game.minions[ i ] );
       }
@@ -136,10 +134,16 @@ game.physics = ( function () {
   var banana = function () {
     /* create minion */
     var model = game.modelLoader.get('Minion2');
+    for (var p = 0; p<model.geometry.materials.length; p++) model.geometry.materials[p].morphTargets = true;
     var mesh = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial());
-    mesh.position.x = -20;
-    mesh.position.y = -7;
+    mesh.count = 0;
+    mesh.rotation.y += 0.4;
+    mesh.position.x = -22;
+    mesh.position.y = -7.25;
     mesh.scale.set(1, 1, 1);
+    mesh.duration = 4000;
+    mesh.keyframes = 4;
+    game.banana = mesh;
     game.scene.add(mesh);
   }
 

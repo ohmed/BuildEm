@@ -85,7 +85,7 @@ var Minion = function () {
     this.body.control = new THREE.Mesh(new THREE.CubeGeometry(1.7, 1.8, 2, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
     }));
-    this.body.control.material.opacity = 0.5;
+    this.body.control.material.opacity = 0.1;
     this.body.control.material.transparent = true;
     this.body.control.position = this.mesh.position;
     this.body.control.oid = 'bControl';
@@ -98,7 +98,7 @@ var Minion = function () {
     this.handL.control = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
     }));
-    this.handL.control.material.opacity = 0.5;
+    this.handL.control.material.opacity = 0.1;
     this.handL.control.material.transparent = true;
     this.handL.control.position = vector;
     this.handL.control.oid = 'handLControl';
@@ -111,7 +111,7 @@ var Minion = function () {
     this.handR.control = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0x00ff00
     }));
-    this.handR.control.material.opacity = 0.5;
+    this.handR.control.material.opacity = 0.1;
     this.handR.control.material.transparent = true;
     this.handR.control.position = vector;
     this.handR.control.oid = 'handRControl';
@@ -123,7 +123,7 @@ var Minion = function () {
     this.legL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0x0000ff
     }));
-    this.legL.control.material.opacity = 0.5;
+    this.legL.control.material.opacity = 0.1;
     this.legL.control.material.transparent = true;
     this.legL.control.position = vector;
     this.legL.control.oid = 'legLControl';
@@ -135,7 +135,7 @@ var Minion = function () {
     this.legR.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0x00f0f0
     }));
-    this.legR.control.material.opacity = 0.5;
+    this.legR.control.material.opacity = 0.1;
     this.legR.control.material.transparent = true;
     this.legR.control.position = vector;
     this.legR.control.oid = 'legRControl';
