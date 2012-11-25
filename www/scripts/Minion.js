@@ -68,15 +68,17 @@ var Minion = function () {
     nailed: false
   };
 
-  this.create = function () {
+  this.create = function ( v, r ) {
 
     /* create minion */
     var model = game.modelLoader.get('Minion1');
     this.mesh = new Physijs.ConeMesh(model.geometry, Physijs.createMaterial(new THREE.MeshFaceMaterial(), .5, .8), 10);
-    this.mesh.position.set(13, 0, 0);
+    this.mesh.position.set( v.x, v.y, v.z);
+    this.mesh.rotation.set( r.x, r.y, r.z);
     this.mesh.scale.set(1, 1, 1);
     this.mesh.oid = 'minion';
     this.mesh.mid = this.id;
+    this.mesh.visible = false;
     game.scene.add(this.mesh);
 
     /* create control Body */
@@ -140,6 +142,7 @@ var Minion = function () {
     this.legR.control.mid = this.id;
     game.scene.add(this.legR.control);
 
+    return this;
 
   };
 
@@ -250,8 +253,6 @@ var Minion = function () {
 
   };
 
-  this.create();
-
   this.getNearestLimb = function (v) {
     var ar = game.minions;
     for (var i in ar) {
@@ -266,7 +267,7 @@ var Minion = function () {
       if (v.distanceTo(minion.legL.control.position) < 2) {
         return minion.legL;
       }
-      if (v.distanceTo(minion.legR.control.position) < 2 ) {
+      if (v.distanceTo(minion.legR.control.position) < 1 ) {
         return minion.legR;
       }
     }
@@ -288,3 +289,28 @@ var Minion = function () {
 };
 
 Minion.count = 1;
+
+Minion.queue = function () {
+  var ar = [];
+
+  for ( var i = 0; i < 5; i++ ) {
+    var minion = new Minion().create( new THREE.Vector3(), new THREE.Vector3() );
+    minion.group = i;
+    game.groups[i] = [];
+    game.groups[i].push( minion.id-1 );
+    ar.push( minion );
+  }
+
+  setTimeout( function () {
+    for ( var i = 0; i < 5; i++ ) {
+      var angle = i === 4 ? -2 * Math.PI : -Math.PI / 2;
+      ar[ i ].mesh.position = new THREE.Vector3( 20 - (i + 1) * 3, -7, 0 ); 
+      ar[ i ].mesh.__dirtyPosition = true;
+      ar[ i ].mesh.rotation = new THREE.Vector3( 0, angle, 0 );
+      ar[ i ].mesh.__dirtyRotation = true;
+      ar[ i ].mesh.visible = true;
+    }
+  }, 5000 );   
+
+  game.minions = ar;
+}
