@@ -75,6 +75,9 @@ game.render = function() {
     if (game.minions[i].mesh.position.y < -1 || game.DRAG.id) {
       break;
     }
+    if (game.minions[i].mesh.position.x < 3 && game.minions[i].mesh.position.y < 0) {
+      game.LOSE();
+    }
     if ( i+1 == game.minions.length ) {
       game.WON();
     }

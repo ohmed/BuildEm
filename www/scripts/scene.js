@@ -381,6 +381,11 @@ var game = {
   WON: function() {
     game.finish = true;
     alert('YOU WON!');
+  },
+
+  LOSE: function () {
+    game.finish = true;
+    alert('YOU LOSE!');
   }
 
 };
