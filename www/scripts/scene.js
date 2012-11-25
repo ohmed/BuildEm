@@ -50,7 +50,7 @@ var game = {
             minion = game.minions[ i ];
         }
 
-        game.physics.action( 'stop', minion );
+        //game.physics.action( 'stop', minion );
 
         minion.mesh.__dirtyRotation = true;
         minion.mesh.rotation.y = 0;
@@ -183,11 +183,13 @@ var game = {
           neighbour.neighbours[ nearestLimb.name ].name = 'legL'; 
           var nG = Math.min( minion.group, neighbour.group );
           var oG = Math.max( minion.group, neighbour.group );
-          for (var k = 0; k<game.groups[oG].length; k++) {
-            game.minions[ game.groups[oG][k] ].group = nG;
-            game.groups[nG].push( game.groups[oG][k] );
+          if (nG !== oG) {
+            for (var k = 0; k<game.groups[oG].length; k++) {
+              game.minions[ game.groups[oG][k] ].group = nG;
+              game.groups[nG].push( game.groups[oG][k] );
+            }
+            game.groups[oG].length = 0;
           }
-          game.groups[oG].length = 0;
           game.DRAG = { id: false, object: false };
           minion = false;
           return;
@@ -214,11 +216,13 @@ var game = {
           neighbour.neighbours[ nearestLimb.name ].name = 'legR';
           var nG = Math.min( minion.group, neighbour.group );
           var oG = Math.max( minion.group, neighbour.group );
-          for (var k = 0; k<game.groups[oG].length; k++) {
-            game.minions[ game.groups[oG] ].group = nG;
-            game.groups[nG].push( game.groups[oG] );
+          if (nG !== oG) {
+            for (var k = 0; k<game.groups[oG].length; k++) {
+              game.minions[ game.groups[oG] ].group = nG;
+              game.groups[nG].push( game.groups[oG] );
+            }
+            game.groups[oG].length = 0;
           }
-          game.groups[oG].length = 0;
           game.DRAG = { id: false, object: false };
           minion = false;
           return;
