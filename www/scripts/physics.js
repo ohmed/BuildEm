@@ -1,17 +1,18 @@
+var _visited = [];
+
 game.physics = ( function () {
 
   var moveId = null;
   var strechId = null;
 
-  var _visited = [];
+  var affectAll = function ( minion, groupElementCount ) {
 
-  var affectAll = function ( minion ) {
     if ( !game.minions.length ) return;
 
     minion = minion || game.minions[ 0 ];
 
     if ( _visited.indexOf( minion.id ) !== -1 ) {
-      if ( _visited.length === game.minions.length ) {
+      if ( _visited.length === groupElementCount ) {
         _visited.length = 0;
         return;
       } else {
@@ -27,18 +28,15 @@ game.physics = ( function () {
       var type = minion.neighbours[ i ].name;
 
       neighbour[type].control.update = false;
+      minion[ i ].control.update = true;
       neighbour[type].control.position = minion[ i ].control.position.clone();
       
       _visited.push( minion.id );
-      affectAll( neighbour );
+      affectAll( neighbour, groupElementCount );
 
     }
 
   }
-
-  var aId = setInterval( function () {
-    affectAll();
-  }, 50 );
 
   var strech = function ( minion, type ) {
     
@@ -123,7 +121,9 @@ game.physics = ( function () {
   }
 
   return {
-    action: action
+    action: action,
+    affectAll: affectAll,
+    strech: strech
   };
 
 
