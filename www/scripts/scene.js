@@ -240,7 +240,10 @@ var game = {
       mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-      if ( ( game.DRAG.id.replace('Control', '').indexOf('hand') !== -1 || game.DRAG.id.replace('Control', '').indexOf('leg') !== -1 ) && minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position ) ) {
+      var nail = minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position );
+
+      if ( ( game.DRAG.id.replace('Control', '').indexOf('hand') !== -1 || game.DRAG.id.replace('Control', '').indexOf('leg') !== -1 ) && nail )  {
+        nail.mesh.material.color = 0x0000ff;
         minion[ game.DRAG.id.replace('Control', '') ].nailed = true;
         game.DRAG = { object: false, id: false };
         minion = false;
