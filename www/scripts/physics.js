@@ -6,15 +6,36 @@ game.physics = ( function () {
   var _visited = [];
 
   var affectAll = function ( minion ) {
-    if ( _visited.indexOf( minion.id ) !== -1 ) return;
+    if ( !game.minions.length ) return;
 
-    _visited.push( minion.id );
-    console.log( 'affected(', minion.id, ')' );
+    minion = minion || game.minions[ 0 ];
 
-    for ( var i in minion.neigbours ) {
-      affectAll( minion.neigbours[ i ] );
+    if ( _visited.indexOf( minion.id ) !== -1 ) {
+      _visited.push( minion.id );
+      if ( _visited.length === game.minions.length) {
+        _visited.length = 0;
+      } else {
+        return;
+      }
+    }
+
+    for ( var i in minion.neighbours ) {
+
+      if (!minion.neighbours[ i ].neighbour) continue;
+
+      var neighbour = minion.neighbours[ i ].neighbour;
+      var type = minion.neighbours[ i ].name;
+
+      neighbour[type].control.update = false;
+      neighbour[type].control.position = minion[ i ].control.position.clone();
+
+      affectAll( neighbour );
     }
   }
+
+  var aId = setInterval( function () {
+    affectAll();
+  }, 50 );
 
   var strech = function ( minion, type ) {
     

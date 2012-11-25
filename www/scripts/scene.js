@@ -99,6 +99,13 @@ var game = {
         if ( nearestLimb ) {
           neighbour = nearestLimb.parent;
           minion.handL.control.position = nearestLimb.control.position.clone();
+          minion.neighbours[ 'handL' ].neighbour = neighbour;
+          minion.neighbours[ 'handL' ].name = nearestLimb.name; 
+          neighbour.neighbours[ nearestLimb.name ].neighbour = minion;
+          neighbour.neighbours[ nearestLimb.name ].name = 'handL'; 
+          game.DRAG = { id: false, object: false };
+          minion = false;
+          return;
         }
         game.physics.action( 'move', minion, 'handL' );
         break;
@@ -116,6 +123,13 @@ var game = {
         if ( nearestLimb ) {
           neighbour = nearestLimb.parent;
           minion.handR.control.position = nearestLimb.control.position.clone();
+          minion.neighbours[ 'handR' ].neighbour = neighbour;
+          minion.neighbours[ 'handR' ].name = nearestLimb.name; 
+          neighbour.neighbours[ nearestLimb.name ].neighbour = minion;
+          neighbour.neighbours[ nearestLimb.name ].name = 'handR'; 
+          game.DRAG = { id: false, object: false };
+          minion = false;
+          return;
         }
         game.physics.action( 'move', minion, 'handR' );
         break;
@@ -217,8 +231,6 @@ var game = {
 
     game.setHandlers();
 
-    game.minions.push( new Minion() );
-    game.minions.push( new Minion() );
     game.minions.push( new Minion() );
     game.minions.push( new Minion() );
 
