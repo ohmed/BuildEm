@@ -19,6 +19,7 @@ var game = {
     game.modelLoader.finishCallback = game.init;
     game.modelLoader.totalModels = 1;
     game.modelLoader.load( { name: 'Minion1', model: 'resources/models/minion1.js' } );
+    $('.gears').show();
   },
 
   setHandlers: function() {
@@ -294,9 +295,9 @@ var game = {
 
 
     /* add stage */
-    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
-    game.stage.position.set(0, -9.8, 0);
-    game.stage.scale.set( 40, 3, 400 );
+    game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 23, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
+    game.stage.position.set(0, -20, 0);
+    game.stage.scale.set( 40, 1, 400 );
     game.scene.add( game.stage );
     game.stage = new Physijs.BoxMesh(new THREE.CubeGeometry(1, 1, 1), Physijs.createMaterial( new THREE.MeshBasicMaterial({color: 0xaaaaaa}), .8, .4 ), 0 );
     game.stage.position.set(-20, 0, 0);
