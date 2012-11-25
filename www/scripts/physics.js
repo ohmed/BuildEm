@@ -86,7 +86,7 @@ game.physics = ( function () {
       var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 * forceStrength );
       var dist = axis.clone().distanceTo( minion.mesh.position );
 
-      if ( dist > 2 ) {
+      if ( dist > 3 ) {
         minion.mesh.applyCentralImpulse( force );
       } 
 

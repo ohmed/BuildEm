@@ -96,7 +96,7 @@ var Minion = function () {
     /* create control LH */
     var vector = this.mesh.geometry.vertices[1317].clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
-    this.handL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
+    this.handL.control = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
     }));
     this.handL.control.material.opacity = 0.5;
@@ -109,7 +109,7 @@ var Minion = function () {
     /* create control RH */
     vector = this.mesh.geometry.vertices[this.handR.verts[0]].clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
-    this.handR.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
+    this.handR.control = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0x00ff00
     }));
     this.handR.control.material.opacity = 0.5;
@@ -280,7 +280,7 @@ var Minion = function () {
     for (var i in ar) {
       var nail = ar[i];
       if (nail.id === this.id) continue;
-      if (v.distanceTo(nail.mesh.position) < 3) {
+      if (v.distanceTo(nail.mesh.position) < 1) {
         return nail;
       }
     }

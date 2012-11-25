@@ -23,8 +23,10 @@ game.render = function() {
     function checkConnection( param ) {
       self = game.minions[i];
       var s = self.neighbours[param] || false;
-      if ( self[param].control.position.distanceTo( self.mesh.position ) > 7 && (self[param].nailed || self.neighbours[param].neighbour) ) {
-        if (self[param].nailed) self[param].update = false;
+      if ( (self[param].control.position.distanceTo( self.mesh.position ) > 4 && self.neighbours[param].neighbour) || (self[param].nailed && ( !self.getNearestNail( self[ param ].control.position ) || self[param].control.position.distanceTo( self.mesh.position ) > 5 ) ) ) {
+        if (self[param].nailed) {
+          self[param].update = false;
+        }
         self[param].nailed = false;
         clearInterval( self.intervals[ 'move' + param ] );
 
@@ -35,7 +37,7 @@ game.render = function() {
           s.neighbour[s.name].update = false;
 
           if (!self.neighbours['handL'].name && !self.neighbours['handR'].name && !self.neighbours['legL'].name && !self.neighbours['legR'].name) {
-            game.groups.push( [self.id  ] );
+            game.groups.push( [ self.id ] );
             for (var p = 0; p<game.groups[ self.group ].length; p++) {
               if ( game.groups[ self.group ][ p ] == self.id - 1 ) {
                 game.groups[ self.group ].splice( p, 1 );
