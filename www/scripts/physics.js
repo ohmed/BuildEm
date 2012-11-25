@@ -27,10 +27,20 @@ game.physics = ( function () {
       var neighbour = minion.neighbours[ i ].neighbour;
       var type = minion.neighbours[ i ].name;
 
-      neighbour[type].control.update = false;
-      minion[ i ].control.update = true;
-      neighbour[type].control.position = minion[ i ].control.position.clone();
+      minion[ i ].update = false;
+      neighbour[type].update = false;
+      var newPos = new THREE.Vector3(
+        neighbour.mesh.position.x - (neighbour.mesh.position.x - minion.mesh.position.x) / 2,
+        neighbour.mesh.position.y - (neighbour.mesh.position.y - minion.mesh.position.y) / 2,
+        0
+      );
+
+      minion[ i ].control.position = newPos;
+      neighbour[type].control.position = newPos;
       
+      minion.mesh.applyImpulse( minion.mesh.position.clone().subSelf( neighbour[type].control.position ).negate().normalize().multiplyScalar( 5 ), minion.mesh.position.clone().subSelf( neighbour[type].control.position ) );
+      //neighbour.mesh.applyImpulse( minion.mesh.position.clone().subSelf( neighbour[type].control.position ).normalize().multiplyScalar( 5 ), minion.mesh.position.clone().subSelf( neighbour[type].control.position ) );
+
       _visited.push( minion.id );
       affectAll( neighbour, groupElementCount );
 
@@ -70,7 +80,7 @@ game.physics = ( function () {
     minion.intervals[ 'move' + type ] = setInterval( function () {
 
       var dist = minion[ type ].control.position.distanceTo( minion.mesh.position );
-      var forceStrength = dist / 2;
+      var forceStrength = dist / 5;
       var axis = minion[ type ].control.position;
       var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 * forceStrength );
       var dist = axis.clone().distanceTo( minion.mesh.position );

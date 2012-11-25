@@ -96,7 +96,7 @@ var Minion = function () {
     vector = this.mesh.geometry.vertices[this.handR.verts[0]].clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
     this.handR.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
-      color: 0xff0000
+      color: 0x00ff00
     }));
     this.handR.control.material.opacity = 0.5;
     this.handR.control.material.transparent = true;
@@ -114,8 +114,9 @@ var Minion = function () {
 
   this.update = function (param) {
 
-    function updateHand(mesh, hand) {
+    function updateHand(hand) {
       var g, m, v, handVector;
+      var mesh = self.mesh;
 
       /* move hand parts */
 
@@ -151,11 +152,11 @@ var Minion = function () {
 
     }
 
-    updateHand(this.mesh, this[param]);
+    updateHand( this[param] );
 
   };
 
-  this.updateControls = function (param) {
+  this.updateControls = function () {
 
     if (this.handR.update) {
       var v = this.mesh.geometry.vertices[this.handR.verts[0]].clone();

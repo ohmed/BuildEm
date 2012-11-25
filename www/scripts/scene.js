@@ -158,11 +158,10 @@ var game = {
       mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-      if ( minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position ) ) {
+      if ( game.DRAG.id.replace('Control', '').indexOf('hand') !== -1 && minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position ) ) {
         minion[ game.DRAG.id.replace('Control', '') ].nailed = true;
         game.DRAG = { object: false, id: false };
         minion = false;
-        return;
       }
 
       if (game.DRAG.id === 'bControl') {

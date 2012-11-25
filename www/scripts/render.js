@@ -5,12 +5,6 @@ game.render = function() {
     if (game.groups[k].length>0) {
       var min = game.minions[ game.groups[k][0] ].mesh.position.y;
       var minID = 0;
-      /*for (var p = 1; p<game.groups[k].length; p++) {
-        if (min > game.minions[ game.groups[k][p] ].mesh.position.y) {
-          min = game.minions[ game.groups[k][p] ].mesh.position.y;
-          minID = p;
-        }
-      }*/
       game.physics.affectAll( game.minions[ game.groups[k][0] ], game.groups[k].length );
     }
   }
