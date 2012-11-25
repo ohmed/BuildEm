@@ -49,7 +49,7 @@ game.physics = ( function () {
 
   var strech = function ( minion, type ) {
     
-    if (game.DRAG.id) return;
+    //if (game.DRAG.id) return;
 
     clearInterval( minion.intervals[ 'strech' + type ] );
 
@@ -86,11 +86,11 @@ game.physics = ( function () {
       var force = axis.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 25 * forceStrength );
       var dist = axis.clone().distanceTo( minion.mesh.position );
 
-      if ( dist > 4 ) {
+      if ( dist > 2 ) {
         minion.mesh.applyCentralImpulse( force );
       } 
 
-    }, 50 ); 
+    }, 20 ); 
 
   }
 

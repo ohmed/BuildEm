@@ -19,6 +19,26 @@ game.render = function() {
     game.minions[i].mesh.setAngularFactor({x:0,y:0,z:0});
     game.minions[i].mesh.__dirtyPosition = true;
     game.minions[i].mesh.position.z = 0;
+
+    function checkConnection( param ) {
+      self = game.minions[i];
+      if ( self[param].control.position.distanceTo( self.mesh.position ) > 5 && (self[param].nailed || self.neighbours[param].neighbour) ) {
+        if (self[param].nailed) self[param].update = false;
+        self[param].nailed = false;
+        if ( self.neighbours[param].neighbour ) {
+          self[param].update = false;
+          self.neighbours[param].neighbour.neighbours[ self.neighbours[param].name ] = {'neighbour': null,'name': null};
+          self.neighbours[param] = {'neighbour': null,'name': null};
+        }
+        game.physics.strech( self, param );
+      }
+    }
+
+    checkConnection( 'handL' );
+    checkConnection( 'handR' );
+    checkConnection( 'legL' );
+    checkConnection( 'legR' );
+
   }
 
   if (Date.now() - game.renderer.lastFrame >= 1000/12) {
