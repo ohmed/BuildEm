@@ -28,7 +28,7 @@ Nail.build = function () {
     var r = 20;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   for ( var i = -20; i < 30; i+=2 ) {    
@@ -36,7 +36,7 @@ Nail.build = function () {
     var r = 18;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   for ( var i = -20; i < 30; i+=3 ) {    
@@ -44,7 +44,7 @@ Nail.build = function () {
     var r = 15;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   for ( var i = -20; i < 30; i+=4 ) {    
@@ -52,7 +52,7 @@ Nail.build = function () {
     var r = 10;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   for ( var i = -20; i < 30; i+=4 ) {    
@@ -60,7 +60,7 @@ Nail.build = function () {
     var r = 5;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   for ( var i = -20; i < 30; i++ ) {    
@@ -68,7 +68,7 @@ Nail.build = function () {
     var r = 24;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   for ( var i = -20; i < 30; i++ ) {    
@@ -76,7 +76,7 @@ Nail.build = function () {
     var r = 26;
     var x = -5 + Math.cos( theta ) * r;
     var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, 0 ) ) );
+    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
   }
 
   game.nails = nails;
