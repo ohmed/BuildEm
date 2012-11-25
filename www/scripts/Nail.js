@@ -21,63 +21,10 @@ Nail.count = 1;
 
 Nail.build = function () {
   var nails = [];
-  var rand = Math.random;
 
-  for ( var i = -20; i < 30; i++ ) {    
-    var theta = 2 * Math.PI * i / 40;
-    var r = 20;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
-
-  for ( var i = -20; i < 30; i+=2 ) {    
-    var theta = 2 * Math.PI * i / 30;
-    var r = 18;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
-
-  for ( var i = -20; i < 30; i+=3 ) {    
-    var theta = 2 * Math.PI * i / 20;
-    var r = 15;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
-
-  for ( var i = -20; i < 30; i+=4 ) {    
-    var theta = 2 * Math.PI * i / 10;
-    var r = 10;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
-
-  for ( var i = -20; i < 30; i+=4 ) {    
-    var theta = 2 * Math.PI * i / 10;
-    var r = 5;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
-
-  for ( var i = -20; i < 30; i++ ) {    
-    var theta = 2 * Math.PI * i / 10;
-    var r = 24;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
-
-  for ( var i = -20; i < 30; i++ ) {    
-    var theta = 2 * Math.PI * i / 10;
-    var r = 26;
-    var x = -5 + Math.cos( theta ) * r;
-    var y = Math.sin( theta ) * r;
-    nails.push( ( new Nail() ).addToScene( new THREE.Vector3( x , y, -10 ) ) );
-  }
+  nails.push( ( new Nail() ).addToScene( new THREE.Vector3( -2 , 6, -10 ) ) );
+  nails.push( ( new Nail() ).addToScene( new THREE.Vector3( -7 , 7, -10 ) ) );
+  nails.push( ( new Nail() ).addToScene( new THREE.Vector3( 3 , 7, -10 ) ) );
 
   game.nails = nails;
 }
