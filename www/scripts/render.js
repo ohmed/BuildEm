@@ -72,13 +72,11 @@ game.render = function() {
   }
 
   for (var i = 0; i<game.minions.length; i++) {
-    if (game.minions[i].mesh.position.y < -2 || game.DRAG.id) {
-      continue;
+    if (game.minions[i].mesh.position.y < -1 || game.DRAG.id) {
+      break;
     }
     if ( i+1 == game.minions.length ) {
-
       game.WON();
-
     }
   }
 
