@@ -73,6 +73,9 @@ var game = {
 
       if (!game.DRAG.object) return;
 
+      minion.mesh.rotation.y = -2 * Math.PI;
+      minion.mesh.__dirtyRotation = true;
+
       switch (game.DRAG.id) {
       case 'bControl':
         if (minion.move) clearInterval( minion.move );
@@ -319,36 +322,7 @@ var game = {
 
     game.setHandlers();
 
-    var m = new Minion();
-    m.mesh.position.x -= 5;
-    game.minions.push( m );
-    m.group = 0;
-    game.groups[0] = [];
-    game.groups[0].push( m.id-1 );
-
-    m = new Minion();
-    game.minions.push( m );
-    m.group = 1;
-    game.groups[1] = [];
-    game.groups[1].push( m.id-1 );
-
-    m = new Minion();
-    game.minions.push( m );
-    m.group = 2;
-    game.groups[2] = [];
-    game.groups[2].push( m.id-1 );
-
-    m = new Minion();
-    game.minions.push( m );
-    m.group = 3;
-    game.groups[3] = [];
-    game.groups[3].push( m.id-1 );
-
-    m = new Minion();
-    game.minions.push( m );
-    m.group = 4;
-    game.groups[4] = [];
-    game.groups[4].push( m.id-1 );
+    Minion.queue();
 
     Nail.build();
 

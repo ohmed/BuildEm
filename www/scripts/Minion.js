@@ -253,21 +253,21 @@ var Minion = function () {
 
   };
 
-  this.getNearestLimb = function (v) {
+  this.getNearestLimb = function ( v ) {
     var ar = game.minions;
-    for (var i in ar) {
+    for ( var i in ar ) {
       var minion = ar[i];
-      if (minion.id === this.id) continue;
-      if (v.distanceTo(minion.handL.control.position) < 2) {
+      if ( minion.id === this.id ) continue;
+      if ( v.distanceTo(minion.handL.control.position) < 1 ) {
         return minion.handL;
       }
-      if (v.distanceTo(minion.handR.control.position) < 2 ) {
+      if ( v.distanceTo(minion.handR.control.position) < 1 ) {
         return minion.handR;
       }
-      if (v.distanceTo(minion.legL.control.position) < 2) {
+      if ( v.distanceTo(minion.legL.control.position) < 1 ) {
         return minion.legL;
       }
-      if (v.distanceTo(minion.legR.control.position) < 1 ) {
+      if ( v.distanceTo(minion.legR.control.position) < 1 ) {
         return minion.legR;
       }
     }
@@ -293,24 +293,15 @@ Minion.count = 1;
 Minion.queue = function () {
   var ar = [];
 
-  for ( var i = 0; i < 5; i++ ) {
-    var minion = new Minion().create( new THREE.Vector3(), new THREE.Vector3() );
+  for ( var i = 0; i < 8; i++ ) {
+    var angle = i === 7 ? -2 * Math.PI : -Math.PI / 2;
+    var minion = new Minion().create( new THREE.Vector3( 20 - (i + 1) * 2, -7, 0 ), new THREE.Vector3( 0, angle, 0 ) );
     minion.group = i;
     game.groups[i] = [];
     game.groups[i].push( minion.id-1 );
     ar.push( minion );
+    minion.mesh.visible = true;
   }
-
-  setTimeout( function () {
-    for ( var i = 0; i < 5; i++ ) {
-      var angle = i === 4 ? -2 * Math.PI : -Math.PI / 2;
-      ar[ i ].mesh.position = new THREE.Vector3( 20 - (i + 1) * 3, -7, 0 ); 
-      ar[ i ].mesh.__dirtyPosition = true;
-      ar[ i ].mesh.rotation = new THREE.Vector3( 0, angle, 0 );
-      ar[ i ].mesh.__dirtyRotation = true;
-      ar[ i ].mesh.visible = true;
-    }
-  }, 5000 );   
 
   game.minions = ar;
 }
