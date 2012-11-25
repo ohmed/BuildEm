@@ -81,8 +81,11 @@ var game = {
           minion.mesh.position = ray.origin.clone();
           minion.mesh.position.z = 0;
         }, 5 );
-        minion.handL.update = true;
-        minion.handR.update = true;
+
+        if ( minion.neighbours.handL.neighbour || minion.handL.nailed ) minion.handL.update = false;
+        if ( minion.neighbours.handR.neighbour || minion.handR.nailed ) minion.handR.update = false;
+        if ( minion.neighbours.legL.neighbour || minion.legL.nailed ) minion.legL.update = false;
+        if ( minion.neighbours.legR.neighbour || minion.legR.nailed ) minion.legR.update = false;
         break;
       case 'handLControl':
         if ( minion.handL.control.position.distanceTo( minion.mesh.position ) > 5 ) {
@@ -226,7 +229,7 @@ var game = {
 
       if (game.DRAG.id === 'bControl') {
         clearInterval( minion.move );
-        game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
+        if (minion.neighbours.handL.neighbour || minion.handL.nailed || minion.neighbours.handR.neighbour || minion.handR.nailed || minion.neighbours.legL.neighbour || minion.legL.nailed || minion.neighbours.legR.neighbour || minion.legR.nailed ) {} else game.physics.action( 'catapult', minion, mouseDown2D.clone().subSelf( mouseUp2D ) );
       } else if (game.DRAG.object && game.DRAG.id.indexOf('Control') !== -1) {
         game.DRAG = { object: false, id: false };
         if ( minion.neighbours.handL.neighbour || minion.handL.nailed ) minion.handL.update = false; else {
