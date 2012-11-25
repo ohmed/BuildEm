@@ -47,8 +47,6 @@ var game = {
             minion = game.minions[ i ];
         }
 
-        /*game.physics.action( 'stop', minion, 'handL' );
-        game.physics.action( 'stop', minion, 'handR' );*/
         minion.mesh.__dirtyRotation = true;
         minion.mesh.rotation.y = 0;
 
@@ -148,6 +146,68 @@ var game = {
         }
         game.physics.action( 'move', minion, 'handR' );
         break;
+      case 'legLControl':
+        if ( minion.legL.control.position.distanceTo( minion.mesh.position ) > 5 ) {
+          minion.mesh.__dirtyPosition = true;
+          minion.mesh.position.x += ( minion.legL.control.position.x - minion.mesh.position.x ) * 0.3;
+          minion.mesh.position.y += ( minion.legL.control.position.y - minion.mesh.position.y ) * 0.3;
+        }
+        minion.legL.update = false;
+        if (minion.neighbours.legR.neighbour || minion.legR.nailed) minion.legR.update = false; else minion.legR.update = true;
+        minion.legL.control.position = ray.origin.clone();
+        minion.legL.control.position.z = 0;
+        var neighbour, nearestLimb = minion.getNearestLimb( minion.legL.control.position );
+        if ( nearestLimb ) {
+          neighbour = nearestLimb.parent;
+          minion.legL.control.position = nearestLimb.control.position.clone();
+          minion.neighbours[ 'legL' ].neighbour = neighbour;
+          minion.neighbours[ 'legL' ].name = nearestLimb.name; 
+          neighbour.neighbours[ nearestLimb.name ].neighbour = minion;
+          neighbour.neighbours[ nearestLimb.name ].name = 'legL'; 
+          var nG = Math.min( minion.group, neighbour.group );
+          var oG = Math.max( minion.group, neighbour.group );
+          for (var k = 0; k<game.groups[oG].length; k++) {
+            game.minions[ game.groups[oG][k] ].group = nG;
+            game.groups[nG].push( game.groups[oG][k] );
+          }
+          game.groups[oG].length = 0;
+          game.DRAG = { id: false, object: false };
+          minion = false;
+          return;
+        }
+        game.physics.action( 'move', minion, 'legL' );
+        break;
+      case 'legRControl':
+        if ( minion.legR.control.position.distanceTo( minion.mesh.position ) > 5 ) {
+          minion.mesh.__dirtyPosition = true;
+          minion.mesh.position.x += ( minion.legR.control.position.x - minion.mesh.position.x ) * 0.3;
+          minion.mesh.position.y += ( minion.legR.control.position.y - minion.mesh.position.y ) * 0.3;
+        }
+        minion.legR.update = false;
+        if (minion.neighbours.legL.neighbour || minion.legL.nailed ) minion.legL.update = false; else minion.legL.update = true;
+        minion.legR.control.position = ray.origin.clone();
+        minion.legR.control.position.z = 0;
+        var neighbour, nearestLimb = minion.getNearestLimb( minion.legR.control.position );
+        if ( nearestLimb ) {
+          neighbour = nearestLimb.parent;
+          minion.legR.control.position = nearestLimb.control.position.clone();
+          minion.neighbours[ 'legR' ].neighbour = neighbour;
+          minion.neighbours[ 'legR' ].name = nearestLimb.name; 
+          neighbour.neighbours[ nearestLimb.name ].neighbour = minion;
+          neighbour.neighbours[ nearestLimb.name ].name = 'legR';
+          var nG = Math.min( minion.group, neighbour.group );
+          var oG = Math.max( minion.group, neighbour.group );
+          for (var k = 0; k<game.groups[oG].length; k++) {
+            game.minions[ game.groups[oG] ].group = nG;
+            game.groups[nG].push( game.groups[oG] );
+          }
+          game.groups[oG].length = 0;
+          game.DRAG = { id: false, object: false };
+          minion = false;
+          return;
+        }
+        game.physics.action( 'move', minion, 'legR' );
+        break;
       }
 
     });
@@ -158,7 +218,7 @@ var game = {
       mouseUp2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       mouseUp2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-      if ( game.DRAG.id.replace('Control', '').indexOf('hand') !== -1 && minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position ) ) {
+      if ( ( game.DRAG.id.replace('Control', '').indexOf('hand') !== -1 || game.DRAG.id.replace('Control', '').indexOf('leg') !== -1 ) && minion.getNearestNail( minion[ game.DRAG.id.replace('Control', '') ].control.position ) ) {
         minion[ game.DRAG.id.replace('Control', '') ].nailed = true;
         game.DRAG = { object: false, id: false };
         minion = false;
@@ -174,6 +234,12 @@ var game = {
         }
         if ( minion.neighbours.handR.neighbour || minion.handR.nailed ) minion.handR.update = false; else {
           game.physics.strech( minion, 'handR' );
+        }
+        if ( minion.neighbours.legL.neighbour || minion.legL.nailed ) minion.legL.update = false; else {
+          game.physics.strech( minion, 'legL' );
+        }
+        if ( minion.neighbours.legR.neighbour || minion.legR.nailed ) minion.legR.update = false; else {
+          game.physics.strech( minion, 'legR' );
         }
       }
 

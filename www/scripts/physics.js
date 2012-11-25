@@ -39,7 +39,6 @@ game.physics = ( function () {
       neighbour[type].control.position = newPos;
       
       minion.mesh.applyImpulse( minion.mesh.position.clone().subSelf( neighbour[type].control.position ).negate().normalize().multiplyScalar( 5 ), minion.mesh.position.clone().subSelf( neighbour[type].control.position ) );
-      //neighbour.mesh.applyImpulse( minion.mesh.position.clone().subSelf( neighbour[type].control.position ).normalize().multiplyScalar( 5 ), minion.mesh.position.clone().subSelf( neighbour[type].control.position ) );
 
       _visited.push( minion.id );
       affectAll( neighbour, groupElementCount );
@@ -64,6 +63,8 @@ game.physics = ( function () {
       var q;
       if ( type === 'handL') q = -2;
       if ( type === 'handR') q = 2;
+      if ( type === 'legL') q = -2;
+      if ( type === 'legR') q = 2;
       minion[ type ].control.position.x += ( minion.mesh.position.x + q - minion[ type ].control.position.x ) * 0.1;
       minion[ type ].control.position.y += ( minion.mesh.position.y - minion[ type ].control.position.y ) * 0.1;
 
@@ -98,16 +99,34 @@ game.physics = ( function () {
     minion.mesh.applyCentralImpulse( force );
     clearInterval( minion.intervals[ 'strechhandL' ] );
     clearInterval( minion.intervals[ 'strechhandR' ] );
+    clearInterval( minion.intervals[ 'strechlegL' ] );
+    clearInterval( minion.intervals[ 'strechlegR' ] );
     clearInterval( minion.intervals[ 'movehandL' ] );
     clearInterval( minion.intervals[ 'movehandR' ] );
+    clearInterval( minion.intervals[ 'movelegL' ] );
+    clearInterval( minion.intervals[ 'movelegR' ] );
     strech( minion, 'handL' );
     strech( minion, 'handR' );
+    strech( minion, 'legL' );
+    strech( minion, 'legR' );
   }
 
   var catapult = function ( minion, d ) {
     minion.mesh.setDamping( 0, 0.8 );
     var force = d.clone().normalize().multiplyScalar( 200 ).negate();
     minion.mesh.applyCentralImpulse( force );
+  }
+
+  var run = function ( minion ) {    
+    minion.mesh.setDamping( 0.3, 0.8 );      
+    var end = new THREE.Vector3( -15, -9.8, 0 );
+    var angle = Math.atan2( minion.mesh.position.z, minion.mesh.position.y - end.y ) - Math.PI / 2;
+    minion.mesh.rotation.y = angle;
+    minion.mesh.rotation.x = 0;
+    minion.mesh.__dirtyRotation = true;
+    setInterval(function () {
+      minion.mesh.applyCentralImpulse( end.clone().subSelf( minion.mesh.position ).normalize().multiplyScalar( 30 ) );
+    }, 50);      
   }
 
   var action = function ( activity ) {
@@ -126,6 +145,18 @@ game.physics = ( function () {
         break;
       case 'stop':
         stop.apply( null, Array.prototype.slice.call( arguments, 1 ) );
+        break;
+      case 'stopAll':
+        for ( var i in game.minions ) {
+          stop( game.minions[ i ] );
+          game.minions[i].mesh.setAngularVelocity( { x: 1, y: 1, z: 1 } );
+          game.minions[i].mesh.setAngularFactor( { x: 1, y: 1, z: 1 } );
+          game.minions[ i ].mesh.position.z += Math.random() * 4 - 1;
+          game.minions[ i ].mesh.__dirtyPosition = true;
+        }
+        for ( var i in game.minions ) {
+          run( game.minions[ i ] );
+        }
         break;
     }
   }

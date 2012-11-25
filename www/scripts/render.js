@@ -13,6 +13,8 @@ game.render = function() {
     game.minions[i].updateControls();
     if (!game.minions[i].handR.update) game.minions[i].update( 'handR' );
     if (!game.minions[i].handL.update) game.minions[i].update( 'handL' );
+    if (!game.minions[i].legR.update) game.minions[i].update( 'legR' );
+    if (!game.minions[i].legL.update) game.minions[i].update( 'legL' );
     game.minions[i].mesh.setAngularVelocity({x:0,y:0,z:0});
     game.minions[i].mesh.setAngularFactor({x:0,y:0,z:0});
     game.minions[i].mesh.__dirtyPosition = true;

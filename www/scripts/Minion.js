@@ -17,6 +17,14 @@ var Minion = function () {
     'handR': {  
       'neighbour': null,
       'name': null
+    },
+    'legL': {  
+      'neighbour': null,
+      'name': null
+    },
+    'legR': {  
+      'neighbour': null,
+      'name': null
     }
   }
 
@@ -43,17 +51,21 @@ var Minion = function () {
   this.legL = {
     control: {},
     update: true,
-    verts: [],
-    rotation: 0,
-    parent: this
+    verts: [673,674,675,676,677,678,679,680,681,682,683,684,735,736,737,738,739,740,741,742,1355,1356,1357,1358,1359,1360,1361,1362],
+    rotation: Math.PI,
+    parent: this,
+    name: 'legL',
+    nailed: false
   };
 
   this.legR = {
     control: {},
     update: true,
-    verts: [],
-    rotation: 0,
-    parent: this
+    verts: [8,9,10,11,12,13,14,15,16,17,18,19,58,59,60,61,62,63,64,65,630,631,632,633,634,635,636,637],
+    rotation: Math.PI,
+    parent: this,
+    name: 'legR',
+    nailed: false
   };
 
   this.create = function () {
@@ -80,7 +92,6 @@ var Minion = function () {
 
     /* create control LH */
     var vector = this.mesh.geometry.vertices[1317].clone();
-    this.handL._initial = vector.clone();
     this.mesh.matrixWorld.multiplyVector3(vector);
     this.handL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
       color: 0xff0000
@@ -105,9 +116,29 @@ var Minion = function () {
     this.handR.control.mid = this.id;
     game.scene.add(this.handR.control);
 
-    /* create control LL */
+    vector = this.mesh.geometry.vertices[1317].clone();//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    this.mesh.matrixWorld.multiplyVector3(vector);
+    this.legL.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
+      color: 0x0000ff
+    }));
+    this.legL.control.material.opacity = 0.5;
+    this.legL.control.material.transparent = true;
+    this.legL.control.position = vector;
+    this.legL.control.oid = 'legLControl';
+    this.legL.control.mid = this.id;
+    game.scene.add(this.legL.control);
 
-    /* create control RL */
+    vector = this.mesh.geometry.vertices[this.legR.verts[0]].clone();
+    this.mesh.matrixWorld.multiplyVector3(vector);
+    this.legR.control = new THREE.Mesh(new THREE.CubeGeometry(0.8, 0.8, 5, 1, 1, 1), new THREE.MeshBasicMaterial({
+      color: 0x00f0f0
+    }));
+    this.legR.control.material.opacity = 0.5;
+    this.legR.control.material.transparent = true;
+    this.legR.control.position = vector;
+    this.legR.control.oid = 'legRControl';
+    this.legR.control.mid = this.id;
+    game.scene.add(this.legR.control);
 
 
   };
@@ -148,7 +179,36 @@ var Minion = function () {
       mesh.geometry.verticesNeedUpdate = true;
     }
 
-    function updateLeg(param) {
+    function updateLeg(leg) {
+      var g, m, v, legVector;
+      var mesh = self.mesh;
+
+      var legVector = mesh.geometry.vertices[leg.verts[0]].clone();
+      mesh.matrixWorld.multiplyVector3(legVector);
+
+      g = new THREE.Geometry();
+      for (var j = 0; j < leg.verts.length; j++) {
+        v = mesh.geometry.vertices[leg.verts[j]].clone();
+        mesh.matrixWorld.multiplyVector3(v);
+        v.x -= legVector.x;
+        v.y -= legVector.y;
+        g.vertices.push(v);
+      }
+      var teta = Math.atan((leg.control.position.x - mesh.position.x) / (leg.control.position.y - mesh.position.y));
+      var alpha = leg.rotation - teta;
+      leg.rotation = teta;
+      if (leg.control.position.y - mesh.position.y < 0) {
+        alpha -= Math.PI;
+        leg.rotation -= Math.PI;
+      }
+      g.applyMatrix(new THREE.Matrix4().makeRotationZ(alpha));
+      g.applyMatrix(new THREE.Matrix4().makeTranslation(leg.control.position.x - mesh.position.x, leg.control.position.y - mesh.position.y, 0));
+      for (var j = 0; j < leg.verts.length; j++) {
+        v = g.vertices[j].clone();
+        mesh.geometry.vertices[leg.verts[j]] = v;
+      }
+
+      mesh.geometry.verticesNeedUpdate = true;
 
     }
 
@@ -172,6 +232,20 @@ var Minion = function () {
       this.handL.control.position = v;
     }
 
+    if (this.legL.update) {
+      var v = this.mesh.geometry.vertices[this.legL.verts[0]].clone();
+      this.mesh.matrixWorld.multiplyVector3(v);
+      v.z = 0;
+      this.legL.control.position = v;
+    }
+
+    if (this.legR.update) {
+      var v = this.mesh.geometry.vertices[this.legR.verts[0]].clone();
+      this.mesh.matrixWorld.multiplyVector3(v);
+      v.z = 0;
+      this.legR.control.position = v;
+    }
+
     this.body.control.position = this.mesh.position;
 
   };
@@ -188,6 +262,12 @@ var Minion = function () {
       }
       if (v.distanceTo(minion.handR.control.position) < 2 ) {
         return minion.handR;
+      }
+      if (v.distanceTo(minion.legL.control.position) < 2) {
+        return minion.legL;
+      }
+      if (v.distanceTo(minion.legR.control.position) < 2 ) {
+        return minion.legR;
       }
     }
     return false;
