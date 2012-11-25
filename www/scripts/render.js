@@ -110,6 +110,15 @@ game.render = function() {
     mesh.morphTargetInfluences[ mesh.lastKeyframe ] = 1 - mesh.morphTargetInfluences[ mesh.keyframe ];
   }
 
+  function onWindowResize(event) {
+    game.renderer.setSize(window.innerWidth * 1, window.innerHeight * 1);
+    game.camera.aspect = window.innerWidth / window.innerHeight;
+    game.camera.updateProjectionMatrix();
+  }
+
+  /* add resize event handler */
+  window.addEventListener('resize', onWindowResize, false);
+
   game.scene.simulate( undefined, 1);
   requestAnimationFrame( game.render );
   game.stats.update();
